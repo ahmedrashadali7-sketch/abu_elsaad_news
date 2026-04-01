@@ -209,6 +209,8 @@
             gap: 8px;
             font-size: 14px;
             animation: fadeIn 0.3s ease;
+            white-space: nowrap;
+            max-width: 100%;
         }
 
         @keyframes fadeIn {
@@ -511,6 +513,11 @@
             .sections-container {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
+            .tag {
+                font-size: 12px;
+                padding: 4px 10px;
+            }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -576,16 +583,16 @@
                 </small>
             </div>
 
-            <!-- نظام الكلمات المفتاحية مثل اليوتيوب -->
+            <!-- نظام الكلمات المفتاحية مع دعم المسافات -->
             <div class="form-group">
                 <label><i class="fas fa-tags"></i> الكلمات المفتاحية (Tags)</label>
                 <div class="tags-container">
                     <div class="tags-input" id="tagsInput">
                         <div id="tagsList" class="tags-list"></div>
-                        <input type="text" id="tagInput" placeholder="اكتب كلمة مفتاحية ثم اضغط Enter..." onkeypress="handleTagInput(event)">
+                        <input type="text" id="tagInput" placeholder="اكتب كلمة مفتاحية (مثال: أخبار عاجلة, رياضة, اقتصاد) ثم اضغط Enter..." onkeypress="handleTagInput(event)">
                     </div>
                     <small class="tags-hint">
-                        <i class="fas fa-lightbulb"></i> أضف كلمات مفتاحية لتسهيل البحث عن الخبر (مثل: أخبار, عاجل, حصري)
+                        <i class="fas fa-lightbulb"></i> يمكنك كتابة كلمات مكونة من جزئين أو أكثر (مثل: أخبار عاجلة، كرة قدم، الذكاء الاصطناعي)
                     </small>
                     <div class="suggested-tags">
                         <span onclick="addSuggestedTag('عاجل')">#عاجل</span>
@@ -593,8 +600,9 @@
                         <span onclick="addSuggestedTag('خبر')">#خبر</span>
                         <span onclick="addSuggestedTag('تحديث')">#تحديث</span>
                         <span onclick="addSuggestedTag('مهم')">#مهم</span>
-                        <span onclick="addSuggestedTag('فيديو')">#فيديو</span>
-                        <span onclick="addSuggestedTag('صور')">#صور</span>
+                        <span onclick="addSuggestedTag('أخبار عاجلة')">#أخبار عاجلة</span>
+                        <span onclick="addSuggestedTag('كرة قدم')">#كرة قدم</span>
+                        <span onclick="addSuggestedTag('الذكاء الاصطناعي')">#الذكاء الاصطناعي</span>
                     </div>
                 </div>
             </div>
@@ -728,7 +736,7 @@
             }
         };
         
-        // ===== إدارة الكلمات المفتاحية =====
+        // ===== إدارة الكلمات المفتاحية مع دعم المسافات =====
         function updateTagsDisplay() {
             const tagsListDiv = document.getElementById('tagsList');
             tagsListDiv.innerHTML = '';
@@ -736,17 +744,25 @@
                 const tagElement = document.createElement('div');
                 tagElement.className = 'tag';
                 tagElement.innerHTML = `
-                    ${tag}
+                    ${escapeHtml(tag)}
                     <i class="fas fa-times" onclick="removeTag(${index})"></i>
                 `;
                 tagsListDiv.appendChild(tagElement);
             });
         }
         
+        // دالة لحماية النص من الـ XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
         window.removeTag = function(index) {
             tagsList.splice(index, 1);
             updateTagsDisplay();
             console.log('🗑️ تم حذف الكلمة:', index);
+            showMessage('تم حذف الكلمة المفتاحية', 'success');
         };
         
         window.handleTagInput = function(event) {
@@ -756,17 +772,27 @@
                 let tag = input.value.trim();
                 
                 if (tag) {
-                    // تنظيف الكلمة من الرموز غير المرغوب فيها
-                    tag = tag.replace(/[#,\s]/g, '');
+                    // لا نقوم بإزالة المسافات، نحتفظ بالكلمة كما هي
+                    // فقط نزيل علامة # من البداية إذا وجدت
+                    if (tag.startsWith('#')) {
+                        tag = tag.substring(1);
+                    }
+                    
+                    // نزيل الفواصل الزائدة من البداية والنهاية
+                    tag = tag.replace(/^[,،\s]+|[,،\s]+$/g, '');
+                    
+                    // التحقق من عدم وجود الكلمة مكررة
                     if (tag && !tagsList.includes(tag)) {
                         tagsList.push(tag);
                         updateTagsDisplay();
                         input.value = '';
                         console.log('✅ تم إضافة كلمة مفتاحية:', tag);
-                        showMessage(`تم إضافة كلمة: ${tag}`, 'success');
+                        showMessage(`✅ تم إضافة: "${tag}"`, 'success');
                     } else if (tagsList.includes(tag)) {
                         showMessage(`⚠️ الكلمة "${tag}" موجودة بالفعل`, 'warning');
                         input.value = '';
+                    } else if (!tag) {
+                        showMessage('⚠️ الرجاء إدخال كلمة صحيحة', 'warning');
                     }
                 }
             }
@@ -777,7 +803,7 @@
                 tagsList.push(tag);
                 updateTagsDisplay();
                 console.log('✅ تم إضافة كلمة مقترحة:', tag);
-                showMessage(`تم إضافة كلمة: ${tag}`, 'success');
+                showMessage(`✅ تم إضافة: "${tag}"`, 'success');
             } else {
                 showMessage(`⚠️ الكلمة "${tag}" موجودة بالفعل`, 'warning');
             }
@@ -810,6 +836,7 @@
             element.classList.add('active');
             selectedSection = section;
             console.log('✅ تم اختيار القسم:', section);
+            showMessage(`تم اختيار قسم: ${element.querySelector('span').innerText}`, 'success');
         };
         
         // ===== اختيار التصنيف الفرعي =====
@@ -820,6 +847,7 @@
             element.classList.add('active');
             selectedCategory = category;
             console.log('✅ تم اختيار التصنيف:', category);
+            showMessage(`تم اختيار تصنيف: ${category}`, 'success');
         };
         
         // ===== عرض الرسائل =====
@@ -884,7 +912,7 @@
                     image: imageUrl,
                     author: authorName,
                     authorEmail: currentUser ? currentUser.email : 'admin@abosaeed.com',
-                    tags: tagsList, // حفظ الكلمات المفتاحية كمصفوفة
+                    tags: tagsList, // حفظ الكلمات المفتاحية كمصفوفة مع المسافات
                     views: 0,
                     createdAt: serverTimestamp(),
                     published: true
