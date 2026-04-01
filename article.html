@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جاري التحميل... - أبو السعد للاخبار</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #C49A6C;
+            --primary-dark: #a57d54;
+            --secondary: #2C3E50;
+            --secondary-dark: #1a252f;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --text-light: #666;
+            --text-dark: #2C3E50;
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --shadow: 0 5px 20px rgba(0,0,0,0.1);
+            --shadow-hover: 0 10px 30px rgba(0,0,0,0.15);
+            --radius: 15px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.8;
+        }
+
+        /* ===== الهيدر ===== */
+        .header {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            color: white;
+            padding: 25px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo span {
+            color: var(--primary);
+        }
+
+        /* ===== الحاوية الرئيسية ===== */
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* ===== بطاقة المقال ===== */
+        .article-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .article-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* رأس المقال */
+        .article-header {
+            padding: 35px 35px 20px;
+            background: linear-gradient(to bottom, #fff, #fafafa);
+            border-bottom: 1px solid #eee;
+        }
+
+        .article-category {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .article-title {
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 25px;
+            color: var(--text-light);
+            font-size: 0.95rem;
+            flex-wrap: wrap;
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+            margin-top: 15px;
+        }
+
+        .article-meta i {
+            color: var(--primary);
+            margin-left: 5px;
+        }
+
+        .author-badge {
+            background: #f0f2f5;
+            padding: 5px 15px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-badge i {
+            color: var(--primary);
+        }
+
+        /* صورة المقال */
+        .article-image-container {
+            padding: 0 35px;
+            margin: 30px 0;
+        }
+
+        .article-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        /* محتوى المقال */
+        .article-content {
+            padding: 0 35px 35px;
+            font-size: 1.1rem;
+            color: #444;
+        }
+
+        .article-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .article-content h2 {
+            font-size: 1.8rem;
+            color: var(--secondary);
+            margin: 2rem 0 1rem;
+        }
+
+        .article-content h3 {
+            font-size: 1.4rem;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .article-content img {
+            max-width: 100%;
+            border-radius: var(--radius);
+            margin: 20px 0;
+        }
+
+        .article-content ul,
+        .article-content ol {
+            margin-right: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* تذييل المقال */
+        .article-footer {
+            padding: 30px 35px;
+            background: #fafafa;
+            border-top: 1px solid #eee;
+        }
+
+        .share-section {
+            margin-bottom: 25px;
+        }
+
+        .share-title {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            padding: 12px 25px;
+            border-radius: 40px;
+            color: white;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .share-btn.facebook { background: #1877f2; }
+        .share-btn.twitter { background: #1da1f2; }
+        .share-btn.whatsapp { background: #25d366; }
+        .share-btn.telegram { background: #0088cc; }
+
+        .share-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .back-link:hover {
+            gap: 12px;
+            color: var(--primary-dark);
+        }
+
+        /* حالات التحميل والخطأ */
+        .loading, .error {
+            text-align: center;
+            padding: 80px 20px;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #f0f0f0;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error h3 {
+            color: var(--danger);
+            margin-bottom: 15px;
+        }
+
+        /* الفوتر */
+        .footer {
+            background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+            color: white;
+            padding: 40px 0;
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .footer p {
+            color: #ecf0f1;
+            margin-bottom: 10px;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+            padding: 0 10px;
+        }
+
+        .footer a:hover {
+            color: white;
+        }
+
+        /* تجاوب */
+        @media (max-width: 768px) {
+            .logo { font-size: 1.8rem; }
+            
+            .article-title { font-size: 1.8rem; }
+            
+            .article-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .article-header,
+            .article-content,
+            .article-footer {
+                padding: 20px;
+            }
+            
+            .article-image-container {
+                padding: 0 20px;
+            }
+            
+            .share-buttons {
+                justify-content: center;
+            }
+            
+            .share-btn {
+                padding: 10px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .article-title { font-size: 1.5rem; }
+            
+            .share-btn span { display: none; }
+            
+            .share-btn {
+                padding: 12px;
+                border-radius: 50%;
+            }
+            
+            .share-btn i {
+                margin: 0;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                أبو السعد <span>للاخبار</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="container" id="articleContainer">
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>جاري تحميل الخبر...</p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 أبو السعد للاخبار - جميع الحقوق محفوظة</p>
+            <p>
+                <a href="index.html">الرئيسية</a> | 
+                <a href="login.html">دخول المشرف</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <!-- ملف الإعدادات -->
+    <script src="js/firebase-config.js"></script>
+
+    <script>
+        // التأكد من تحميل Firebase
+        if (typeof firebase === 'undefined') {
+            document.getElementById('articleContainer').innerHTML = `
+                <div class="error">
+                    <h3>❌ خطأ في تحميل Firebase</h3>
+                    <p>تأكد من وجود ملف js/firebase-config.js</p>
+                </div>
+            `;
+        } else {
+            const db = firebase.firestore();
+            const urlParams = new URLSearchParams(window.location.search);
+            const newsId = urlParams.get('id');
+
+            if (!newsId) {
+                document.getElementById('articleContainer').innerHTML = `
+                    <div class="error">
+                        <h3>❌ الخبر غير موجود</h3>
+                        <a href="index.html" class="back-link">← العودة للرئيسية</a>
+                    </div>
+                `;
+            } else {
+                db.collection('news').doc(newsId).get()
+                    .then((doc) => {
+                        if (!doc.exists) {
+                            document.getElementById('articleContainer').innerHTML = `
+                                <div class="error">
+                                    <h3>❌ الخبر غير موجود</h3>
+                                    <a href="index.html" class="back-link">← العودة للرئيسية</a>
+                                </div>
+                            `;
+                            return;
+                        }
+
+                        const news = doc.data();
+                        const date = news.createdAt ? news.createdAt.toDate() : new Date();
+
+                        // تحديث عنوان الصفحة
+                        document.title = `${news.title} - أبو السعد للاخبار`;
+
+                        // تحديث المشاهدات
+                        db.collection('news').doc(newsId).update({
+                            views: (news.views || 0) + 1
+                        }).catch(() => {});
+
+                        // تنسيق التاريخ
+                        const formattedDate = date.toLocaleDateString('ar-EG', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+
+                        const formattedTime = date.toLocaleTimeString('ar-EG', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+
+                        // عرض الخبر مع اسم الناشر
+                        document.getElementById('articleContainer').innerHTML = `
+                            <article class="article-card">
+                                <div class="article-header">
+                                    <span class="article-category">
+                                        <i class="fas fa-tag"></i> ${news.category || 'عام'}
+                                    </span>
+                                    <h1 class="article-title">${news.title}</h1>
+                                    <div class="article-meta">
+                                        <div class="author-badge">
+                                            <i class="fas fa-user-edit"></i>
+                                            <span>${news.author || 'أبو السعد'}</span>
+                                        </div>
+                                        <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
+                                        <span><i class="fas fa-clock"></i> ${formattedTime}</span>
+                                        <span><i class="fas fa-eye"></i> ${(news.views || 0) + 1} مشاهدة</span>
+                                    </div>
+                                </div>
+
+                                <div class="article-image-container">
+                                    <img src="${news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد'}" 
+                                         alt="${news.title}" 
+                                         class="article-image"
+                                         onerror="this.src='https://via.placeholder.com/800x400?text=صورة'">
+                                </div>
+
+                                <div class="article-content">
+                                    ${news.content || ''}
+                                </div>
+
+                                <div class="article-footer">
+                                    <div class="share-section">
+                                        <h3 class="share-title">
+                                            <i class="fas fa-share-alt"></i> شارك هذا الخبر
+                                        </h3>
+                                        <div class="share-buttons">
+                                            <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" 
+                                               target="_blank" class="share-btn facebook">
+                                                <i class="fab fa-facebook-f"></i> <span>فيسبوك</span>
+                                            </a>
+                                            <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(news.title)}&url=${encodeURIComponent(window.location.href)}" 
+                                               target="_blank" class="share-btn twitter">
+                                                <i class="fab fa-twitter"></i> <span>تويتر</span>
+                                            </a>
+                                            <a href="https://wa.me/?text=${encodeURIComponent(news.title + ' ' + window.location.href)}" 
+                                               target="_blank" class="share-btn whatsapp">
+                                                <i class="fab fa-whatsapp"></i> <span>واتساب</span>
+                                            </a>
+                                            <a href="https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(news.title)}" 
+                                               target="_blank" class="share-btn telegram">
+                                                <i class="fab fa-telegram-plane"></i> <span>تليجرام</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <a href="index.html" class="back-link">
+                                        <i class="fas fa-arrow-right"></i> العودة للرئيسية
+                                    </a>
+                                </div>
+                            </article>
+                        `;
+                    })
+                    .catch((error) => {
+                        console.error('❌ خطأ:', error);
+                        document.getElementById('articleContainer').innerHTML = `
+                            <div class="error">
+                                <h3>❌ حدث خطأ في تحميل الخبر</h3>
+                                <p style="color: #666; margin: 10px;">${error.message}</p>
+                                <a href="index.html" class="back-link">← العودة للرئيسية</a>
+                            </div>
+                        `;
+                    });
+            }
+        }
+    </script>
+</body>
+</html>
