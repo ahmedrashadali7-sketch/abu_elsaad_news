@@ -5,6 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>جاري التحميل... - أبو السعد للاخبار</title>
     
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="" id="metaDescription">
+    <meta name="keywords" content="" id="metaKeywords">
+    <meta name="author" content="" id="metaAuthor">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="" id="ogTitle">
+    <meta property="og:description" content="" id="ogDescription">
+    <meta property="og:image" content="" id="ogImage">
+    <meta property="og:url" content="" id="ogUrl">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="أبو السعد للاخبار">
+    
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="" id="twitterTitle">
+    <meta name="twitter:description" content="" id="twitterDescription">
+    <meta name="twitter:image" content="" id="twitterImage">
+    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -20,6 +39,7 @@
         :root {
             --primary: #C49A6C;
             --primary-dark: #a57d54;
+            --primary-light: #e8d9cc;
             --secondary: #2C3E50;
             --secondary-dark: #1a252f;
             --danger: #e74c3c;
@@ -36,7 +56,7 @@
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: var(--bg-light);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
             color: var(--text-dark);
             line-height: 1.8;
         }
@@ -57,6 +77,7 @@
             margin: 0 auto;
             padding: 0 20px;
             text-align: center;
+            position: relative;
         }
 
         .logo {
@@ -64,6 +85,12 @@
             font-weight: 800;
             text-decoration: none;
             color: white;
+            transition: var(--transition);
+            display: inline-block;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
         }
 
         .logo span {
@@ -84,6 +111,18 @@
             overflow: hidden;
             box-shadow: var(--shadow);
             transition: var(--transition);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .article-card:hover {
@@ -92,25 +131,28 @@
 
         /* رأس المقال */
         .article-header {
-            padding: 35px 35px 20px;
-            background: linear-gradient(to bottom, #fff, #fafafa);
+            padding: 40px 40px 25px;
+            background: linear-gradient(to bottom, #fff, #fefefe);
             border-bottom: 1px solid #eee;
         }
 
         .article-category {
-            display: inline-block;
-            background: var(--primary);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
-            padding: 6px 20px;
+            padding: 8px 20px;
             border-radius: 30px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(196, 154, 108, 0.3);
         }
 
         .article-title {
-            font-size: 2.3rem;
+            font-size: 2.5rem;
             font-weight: 800;
             color: var(--secondary);
             margin-bottom: 20px;
@@ -123,23 +165,36 @@
             color: var(--text-light);
             font-size: 0.95rem;
             flex-wrap: wrap;
-            padding: 15px 0;
+            padding: 15px 0 10px;
             border-top: 1px solid #eee;
             margin-top: 15px;
         }
 
-        .article-meta i {
-            color: var(--primary);
-            margin-left: 5px;
-        }
-
-        .author-badge {
-            background: #f0f2f5;
-            padding: 5px 15px;
-            border-radius: 30px;
+        .article-meta > div, 
+        .article-meta > span {
             display: inline-flex;
             align-items: center;
             gap: 8px;
+        }
+
+        .article-meta i {
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .author-badge {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 6px 18px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .author-badge:hover {
+            transform: translateY(-2px);
+            background: var(--primary-light);
         }
 
         .author-badge i {
@@ -148,7 +203,7 @@
 
         /* صورة المقال */
         .article-image-container {
-            padding: 0 35px;
+            padding: 0 40px;
             margin: 30px 0;
         }
 
@@ -158,122 +213,155 @@
             object-fit: cover;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
+            transition: transform 0.5s ease;
+        }
+
+        .article-image:hover {
+            transform: scale(1.02);
         }
 
         /* محتوى المقال */
         .article-content {
-            padding: 0 35px 35px;
+            padding: 0 40px 40px;
             font-size: 1.1rem;
             color: #444;
+            line-height: 1.9;
         }
 
         .article-content p {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .article-content p:first-child {
+            font-size: 1.15rem;
+            color: #2c3e50;
+            font-weight: 500;
         }
 
         .article-content h2 {
             font-size: 1.8rem;
             color: var(--secondary);
             margin: 2rem 0 1rem;
+            padding-right: 15px;
+            border-right: 4px solid var(--primary);
         }
 
         .article-content h3 {
             font-size: 1.4rem;
             margin: 1.5rem 0 1rem;
+            color: var(--secondary);
         }
 
         .article-content img {
             max-width: 100%;
             border-radius: var(--radius);
             margin: 20px 0;
+            box-shadow: var(--shadow);
         }
 
-        .article-content ul,
-        .article-content ol {
-            margin-right: 2rem;
-            margin-bottom: 1.5rem;
+        .article-content blockquote {
+            background: #f8f9fa;
+            border-right: 4px solid var(--primary);
+            padding: 20px 25px;
+            margin: 25px 0;
+            border-radius: 12px;
+            font-style: italic;
+            color: #555;
         }
 
         /* تذييل المقال */
         .article-footer {
-            padding: 30px 35px;
-            background: #fafafa;
+            padding: 35px 40px;
+            background: linear-gradient(135deg, #fafbfc, #ffffff);
             border-top: 1px solid #eee;
         }
 
         .share-section {
-            margin-bottom: 25px;
+            margin-bottom: 30px;
+            text-align: center;
         }
 
         .share-title {
             font-size: 1.2rem;
             color: var(--secondary);
-            margin-bottom: 15px;
-            display: flex;
+            margin-bottom: 20px;
+            display: inline-flex;
             align-items: center;
             gap: 10px;
+            padding: 8px 20px;
+            background: #f0f2f5;
+            border-radius: 40px;
         }
 
         .share-buttons {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .share-btn {
-            padding: 12px 25px;
-            border-radius: 40px;
+            padding: 12px 28px;
+            border-radius: 50px;
             color: white;
             font-size: 1rem;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            transition: var(--transition);
+            gap: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
         }
 
-        .share-btn.facebook { background: #1877f2; }
-        .share-btn.twitter { background: #1da1f2; }
-        .share-btn.whatsapp { background: #25d366; }
-        .share-btn.telegram { background: #0088cc; }
+        .share-btn.facebook { background: #1877f2; box-shadow: 0 2px 8px rgba(24,119,242,0.3); }
+        .share-btn.twitter { background: #1da1f2; box-shadow: 0 2px 8px rgba(29,161,242,0.3); }
+        .share-btn.whatsapp { background: #25d366; box-shadow: 0 2px 8px rgba(37,211,102,0.3); }
+        .share-btn.telegram { background: #0088cc; box-shadow: 0 2px 8px rgba(0,136,204,0.3); }
 
         .share-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
 
         .back-link {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             color: var(--primary);
             text-decoration: none;
-            font-weight: 600;
-            transition: var(--transition);
+            font-weight: 700;
+            transition: all 0.3s ease;
+            padding: 12px 25px;
+            background: #f8f9fa;
+            border-radius: 40px;
+            margin-top: 10px;
         }
 
         .back-link:hover {
-            gap: 12px;
+            gap: 15px;
             color: var(--primary-dark);
+            background: var(--primary-light);
+            transform: translateX(-5px);
         }
 
         /* حالات التحميل والخطأ */
         .loading, .error {
             text-align: center;
-            padding: 80px 20px;
+            padding: 100px 20px;
             background: var(--white);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
+            animation: fadeInUp 0.5s ease;
         }
 
         .spinner {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             border: 4px solid #f0f0f0;
             border-top: 4px solid var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            margin: 0 auto 25px;
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -281,31 +369,74 @@
         .error h3 {
             color: var(--danger);
             margin-bottom: 15px;
+            font-size: 1.5rem;
         }
 
         /* الفوتر */
         .footer {
             background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
             color: white;
-            padding: 40px 0;
+            padding: 50px 0 30px;
             margin-top: 60px;
             text-align: center;
         }
 
         .footer p {
             color: #ecf0f1;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .footer a {
             color: var(--primary);
             text-decoration: none;
             transition: var(--transition);
-            padding: 0 10px;
+            padding: 0 12px;
         }
 
         .footer a:hover {
             color: white;
+        }
+
+        /* زر العودة للأعلى */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 999;
+        }
+
+        .scroll-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+        
+        /* إخفاء الكلمات المفتاحية عن المستخدمين ولكن تبقى في الكود لجوجل */
+        .seo-tags-hidden {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            width: 0 !important;
+            position: absolute !important;
+            overflow: hidden !important;
+            z-index: -999 !important;
         }
 
         /* تجاوب */
@@ -316,17 +447,17 @@
             
             .article-meta {
                 flex-direction: column;
-                gap: 10px;
+                gap: 12px;
             }
             
             .article-header,
             .article-content,
             .article-footer {
-                padding: 20px;
+                padding: 25px;
             }
             
             .article-image-container {
-                padding: 0 20px;
+                padding: 0 25px;
             }
             
             .share-buttons {
@@ -350,7 +481,12 @@
             
             .share-btn i {
                 margin: 0;
-                font-size: 1.2rem;
+                font-size: 1.3rem;
+            }
+            
+            .article-meta > div, 
+            .article-meta > span {
+                font-size: 0.85rem;
             }
         }
     </style>
@@ -375,11 +511,16 @@
         <div class="container">
             <p>© 2026 أبو السعد للاخبار - جميع الحقوق محفوظة</p>
             <p>
-                <a href="index.html">الرئيسية</a> | 
-                <a href="login.html">دخول المشرف</a>
+                <a href="index.html"><i class="fas fa-home"></i> الرئيسية</a> | 
+                <a href="login.html"><i class="fas fa-user-lock"></i> دخول المشرف</a>
             </p>
         </div>
     </footer>
+
+    <!-- زر العودة للأعلى -->
+    <div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up"></i>
+    </div>
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -389,12 +530,24 @@
     <script src="js/firebase-config.js"></script>
 
     <script>
+        // زر العودة للأعلى
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.getElementById('scrollTop');
+            if (window.pageYOffset > 300) {
+                scrollTop.classList.add('show');
+            } else {
+                scrollTop.classList.remove('show');
+            }
+        });
+
         // التأكد من تحميل Firebase
         if (typeof firebase === 'undefined') {
             document.getElementById('articleContainer').innerHTML = `
                 <div class="error">
+                    <i class="fas fa-database" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
                     <h3>❌ خطأ في تحميل Firebase</h3>
                     <p>تأكد من وجود ملف js/firebase-config.js</p>
+                    <a href="index.html" class="back-link" style="margin-top: 20px;">← العودة للرئيسية</a>
                 </div>
             `;
         } else {
@@ -405,8 +558,10 @@
             if (!newsId) {
                 document.getElementById('articleContainer').innerHTML = `
                     <div class="error">
+                        <i class="fas fa-search" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
                         <h3>❌ الخبر غير موجود</h3>
-                        <a href="index.html" class="back-link">← العودة للرئيسية</a>
+                        <p>لم يتم العثور على الخبر المطلوب</p>
+                        <a href="index.html" class="back-link" style="margin-top: 20px;">← العودة للرئيسية</a>
                     </div>
                 `;
             } else {
@@ -415,8 +570,10 @@
                         if (!doc.exists) {
                             document.getElementById('articleContainer').innerHTML = `
                                 <div class="error">
+                                    <i class="fas fa-newspaper" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
                                     <h3>❌ الخبر غير موجود</h3>
-                                    <a href="index.html" class="back-link">← العودة للرئيسية</a>
+                                    <p>عذراً، هذا الخبر قد يكون تم حذفه أو نقله</p>
+                                    <a href="index.html" class="back-link" style="margin-top: 20px;">← العودة للرئيسية</a>
                                 </div>
                             `;
                             return;
@@ -424,9 +581,33 @@
 
                         const news = doc.data();
                         const date = news.createdAt ? news.createdAt.toDate() : new Date();
-
-                        // تحديث عنوان الصفحة
+                        
+                        // الحصول على الكلمات المفتاحية
+                        const tags = news.tags || [];
+                        
+                        // تحديث SEO Meta Tags
+                        const metaDescription = news.excerpt || news.title;
+                        const metaKeywords = tags.join(', ');
+                        const currentUrl = window.location.href;
+                        
                         document.title = `${news.title} - أبو السعد للاخبار`;
+                        
+                        // تحديث meta tags ديناميكياً
+                        const setMeta = (id, content) => {
+                            const el = document.getElementById(id);
+                            if (el) el.setAttribute('content', content);
+                        };
+                        
+                        setMeta('metaDescription', metaDescription.substring(0, 160));
+                        setMeta('metaKeywords', metaKeywords);
+                        setMeta('metaAuthor', news.author || 'أبو السعد للاخبار');
+                        setMeta('ogTitle', news.title);
+                        setMeta('ogDescription', metaDescription.substring(0, 200));
+                        setMeta('ogImage', news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد');
+                        setMeta('ogUrl', currentUrl);
+                        setMeta('twitterTitle', news.title);
+                        setMeta('twitterDescription', metaDescription.substring(0, 200));
+                        setMeta('twitterImage', news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد');
 
                         // تحديث المشاهدات
                         db.collection('news').doc(newsId).update({
@@ -445,20 +626,31 @@
                             minute: '2-digit'
                         });
 
-                        // عرض الخبر مع اسم الناشر
+                        // إنشاء HTML للكلمات المفتاحية المخفية لجوجل فقط
+                        let hiddenTagsHTML = '';
+                        if (tags.length > 0) {
+                            hiddenTagsHTML = `
+                                <div class="seo-tags-hidden" aria-hidden="true">
+                                    <span class="seo-keywords">الكلمات المفتاحية: ${tags.map(t => '#' + t).join(', ')}</span>
+                                    ${tags.map(tag => `<a href="search.html?tag=${encodeURIComponent(tag)}" rel="tag" class="seo-tag">#${tag}</a>`).join('')}
+                                </div>
+                            `;
+                        }
+
+                        // عرض الخبر بدون الكلمات المفتاحية للمستخدم
                         document.getElementById('articleContainer').innerHTML = `
                             <article class="article-card">
                                 <div class="article-header">
-                                    <span class="article-category">
+                                    <div class="article-category">
                                         <i class="fas fa-tag"></i> ${news.category || 'عام'}
-                                    </span>
+                                    </div>
                                     <h1 class="article-title">${news.title}</h1>
                                     <div class="article-meta">
                                         <div class="author-badge">
                                             <i class="fas fa-user-edit"></i>
                                             <span>${news.author || 'أبو السعد'}</span>
                                         </div>
-                                        <span><i class="fas fa-calendar"></i> ${formattedDate}</span>
+                                        <span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
                                         <span><i class="fas fa-clock"></i> ${formattedTime}</span>
                                         <span><i class="fas fa-eye"></i> ${(news.views || 0) + 1} مشاهدة</span>
                                     </div>
@@ -468,7 +660,7 @@
                                     <img src="${news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد'}" 
                                          alt="${news.title}" 
                                          class="article-image"
-                                         onerror="this.src='https://via.placeholder.com/800x400?text=صورة'">
+                                         onerror="this.src='https://via.placeholder.com/800x400?text=صورة+غير+متوفرة'">
                                 </div>
 
                                 <div class="article-content">
@@ -477,9 +669,10 @@
 
                                 <div class="article-footer">
                                     <div class="share-section">
-                                        <h3 class="share-title">
-                                            <i class="fas fa-share-alt"></i> شارك هذا الخبر
-                                        </h3>
+                                        <div class="share-title">
+                                            <i class="fas fa-share-alt"></i>
+                                            <span>شارك هذا الخبر</span>
+                                        </div>
                                         <div class="share-buttons">
                                             <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" 
                                                target="_blank" class="share-btn facebook">
@@ -499,20 +692,51 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <a href="index.html" class="back-link">
-                                        <i class="fas fa-arrow-right"></i> العودة للرئيسية
-                                    </a>
+                                    <div style="text-align: center;">
+                                        <a href="index.html" class="back-link">
+                                            <i class="fas fa-arrow-right"></i> العودة للرئيسية
+                                        </a>
+                                    </div>
                                 </div>
+                                ${hiddenTagsHTML}
                             </article>
+                            
+                            <!-- Schema.org markup لجوجل مع الكلمات المفتاحية -->
+                            <script type="application/ld+json">
+                            {
+                                "@context": "https://schema.org",
+                                "@type": "NewsArticle",
+                                "headline": "${news.title.replace(/"/g, '\\"')}",
+                                "description": "${(news.excerpt || news.title).replace(/"/g, '\\"').substring(0, 200)}",
+                                "image": "${news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد'}",
+                                "datePublished": "${date.toISOString()}",
+                                "author": {
+                                    "@type": "Person",
+                                    "name": "${news.author || 'أبو السعد للاخبار'}"
+                                },
+                                "publisher": {
+                                    "@type": "Organization",
+                                    "name": "أبو السعد للاخبار",
+                                    "logo": {
+                                        "@type": "ImageObject",
+                                        "url": "https://abosaeed.com/logo.png"
+                                    }
+                                },
+                                "keywords": "${metaKeywords}",
+                                "about": [${tags.map(tag => `"${tag}"`).join(', ')}],
+                                "mentions": [${tags.map(tag => `"${tag}"`).join(', ')}]
+                            }
+                            <\/script>
                         `;
                     })
                     .catch((error) => {
                         console.error('❌ خطأ:', error);
                         document.getElementById('articleContainer').innerHTML = `
                             <div class="error">
+                                <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
                                 <h3>❌ حدث خطأ في تحميل الخبر</h3>
-                                <p style="color: #666; margin: 10px;">${error.message}</p>
-                                <a href="index.html" class="back-link">← العودة للرئيسية</a>
+                                <p style="color: #666; margin: 15px;">${error.message}</p>
+                                <a href="index.html" class="back-link" style="margin-top: 20px;">← العودة للرئيسية</a>
                             </div>
                         `;
                     });
