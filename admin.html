@@ -134,6 +134,47 @@
             box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
         }
 
+        /* تنسيق قسم الخبر العاجل */
+        .breaking-section {
+            background: linear-gradient(135deg, #fff5f5, #fff);
+            border: 2px solid var(--danger);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .breaking-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--danger), var(--danger-dark));
+        }
+
+        .breaking-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--danger);
+        }
+
+        .breaking-title i {
+            font-size: 1.3rem;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
         .form-group {
             margin-bottom: 25px;
         }
@@ -173,7 +214,7 @@
         }
 
         .form-group textarea {
-            min-height: 150px;
+            min-height: 80px;
             resize: vertical;
         }
 
@@ -407,6 +448,15 @@
             transform: none;
         }
 
+        .btn-breaking {
+            background: linear-gradient(135deg, var(--danger), var(--danger-dark));
+            margin-top: 15px;
+        }
+
+        .btn-breaking:hover {
+            box-shadow: 0 10px 20px -5px rgba(231, 76, 60, 0.5);
+        }
+
         .message {
             padding: 15px 20px;
             border-radius: 12px;
@@ -546,6 +596,26 @@
             
             <div id="message" class="message"></div>
             
+            <!-- قسم الخبر العاجل -->
+            <div class="breaking-section">
+                <div class="breaking-title">
+                    <i class="fas fa-bolt"></i>
+                    <span>خبر عاجل - يظهر في الشريط الأحمر</span>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-heading"></i> نص الخبر العاجل</label>
+                    <input type="text" id="breakingTextInput" placeholder="أدخل نص الخبر العاجل... (مثال: عاجل: انطلاق قمة الرياض)">
+                </div>
+                <button class="btn-submit btn-breaking" onclick="publishBreakingNews()" id="breakingBtn">
+                    <i class="fas fa-bolt"></i>
+                    إضافة إلى الشريط العاجل
+                </button>
+            </div>
+
+            <div class="section-divider">
+                <h3><i class="fas fa-edit"></i> إضافة خبر عادي</h3>
+            </div>
+            
             <div class="form-group">
                 <label><i class="fas fa-heading"></i> عنوان الخبر</label>
                 <input type="text" id="title" placeholder="أدخل عنوان الخبر...">
@@ -682,7 +752,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         
         // Firebase configuration
         const firebaseConfig = {
@@ -736,6 +806,42 @@
             }
         };
         
+        // ===== نشر خبر عاجل =====
+        window.publishBreakingNews = async function() {
+            const breakingText = document.getElementById('breakingTextInput').value.trim();
+            
+            if (!breakingText) {
+                showMessage('❌ الرجاء إدخال نص الخبر العاجل', 'error');
+                return;
+            }
+            
+            const btn = document.getElementById('breakingBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإضافة...';
+            
+            try {
+                // حفظ الخبر العاجل في مجموعة منفصلة "breaking"
+                await setDoc(doc(db, 'breaking', 'current'), {
+                    text: breakingText,
+                    createdAt: serverTimestamp(),
+                    author: currentUser ? currentUser.email : 'admin'
+                });
+                
+                console.log('✅ تم إضافة الخبر العاجل بنجاح');
+                showMessage(`✅ تم إضافة الخبر العاجل: "${breakingText}"`, 'success');
+                
+                // تفريغ الحقل
+                document.getElementById('breakingTextInput').value = '';
+                
+            } catch (error) {
+                console.error('❌ خطأ:', error);
+                showMessage(`❌ فشل الإضافة: ${error.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-bolt"></i> إضافة إلى الشريط العاجل';
+            }
+        };
+        
         // ===== إدارة الكلمات المفتاحية مع دعم المسافات =====
         function updateTagsDisplay() {
             const tagsListDiv = document.getElementById('tagsList');
@@ -772,16 +878,12 @@
                 let tag = input.value.trim();
                 
                 if (tag) {
-                    // لا نقوم بإزالة المسافات، نحتفظ بالكلمة كما هي
-                    // فقط نزيل علامة # من البداية إذا وجدت
                     if (tag.startsWith('#')) {
                         tag = tag.substring(1);
                     }
                     
-                    // نزيل الفواصل الزائدة من البداية والنهاية
                     tag = tag.replace(/^[,،\s]+|[,،\s]+$/g, '');
                     
-                    // التحقق من عدم وجود الكلمة مكررة
                     if (tag && !tagsList.includes(tag)) {
                         tagsList.push(tag);
                         updateTagsDisplay();
@@ -869,7 +971,6 @@
             let imageUrl = document.getElementById('imageUrl').value.trim();
             let authorName = document.getElementById('authorName').value.trim();
             
-            // التحقق من الحقول
             if (!title) {
                 showMessage('❌ الرجاء إدخال عنوان الخبر', 'error');
                 return;
@@ -887,12 +988,10 @@
                 return;
             }
             
-            // إذا لم يتم إدخال اسم كاتب
             if (!authorName) {
                 authorName = 'أبو السعد للاخبار';
             }
             
-            // إذا لم يتم إدخال صورة
             if (!imageUrl) {
                 imageUrl = `https://via.placeholder.com/800x400/C49A6C/FFFFFF?text=${encodeURIComponent(title.substring(0, 30))}`;
             }
@@ -902,7 +1001,6 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري النشر...';
             
             try {
-                // حفظ الخبر مع الكلمات المفتاحية
                 const docRef = await addDoc(collection(db, 'news'), {
                     title: title,
                     excerpt: excerpt,
@@ -912,18 +1010,15 @@
                     image: imageUrl,
                     author: authorName,
                     authorEmail: currentUser ? currentUser.email : 'admin@abosaeed.com',
-                    tags: tagsList, // حفظ الكلمات المفتاحية كمصفوفة مع المسافات
+                    tags: tagsList,
                     views: 0,
                     createdAt: serverTimestamp(),
                     published: true
                 });
                 
                 console.log('✅ تم نشر الخبر بنجاح، ID:', docRef.id);
-                console.log('📝 الكاتب:', authorName);
-                console.log('🏷️ الكلمات المفتاحية:', tagsList);
                 showMessage(`✅ تم نشر الخبر "${title}" بنجاح مع ${tagsList.length} كلمة مفتاحية!`, 'success');
                 
-                // تفريغ الحقول
                 document.getElementById('title').value = '';
                 document.getElementById('excerpt').value = '';
                 document.getElementById('content').value = '';
@@ -931,12 +1026,10 @@
                 document.getElementById('authorName').value = '';
                 document.getElementById('imagePreview').style.display = 'none';
                 
-                // تفريغ الكلمات المفتاحية
                 tagsList = [];
                 updateTagsDisplay();
                 document.getElementById('tagInput').value = '';
                 
-                // إزالة التحديد
                 document.querySelectorAll('.section-card').forEach(btn => {
                     btn.classList.remove('active');
                 });
@@ -947,7 +1040,6 @@
                 selectedSection = 'main';
                 selectedCategory = '';
                 
-                // إضافة رابط لفتح الصفحة الرئيسية
                 const msgDiv = document.getElementById('message');
                 const viewLink = document.createElement('div');
                 viewLink.style.marginTop = '10px';
@@ -971,14 +1063,18 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log("🟢 تم تحميل لوحة التحكم بنجاح");
             
-            const textareas = ['title', 'excerpt', 'content'];
+            const textareas = ['title', 'excerpt', 'content', 'breakingTextInput'];
             textareas.forEach(id => {
                 const el = document.getElementById(id);
                 if(el) {
                     el.addEventListener('keypress', function(e) {
                         if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                             e.preventDefault();
-                            window.publishNews();
+                            if(id === 'breakingTextInput') {
+                                window.publishBreakingNews();
+                            } else {
+                                window.publishNews();
+                            }
                         }
                     });
                 }
@@ -989,6 +1085,7 @@
         window.selectSection = selectSection;
         window.selectCategory = selectCategory;
         window.publishNews = publishNews;
+        window.publishBreakingNews = publishBreakingNews;
         window.logout = logout;
         window.previewImage = previewImage;
         window.removeTag = removeTag;
