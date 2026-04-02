@@ -501,7 +501,7 @@
 
         .card-meta {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
             color: #94a3b8;
             font-size: 0.75rem;
@@ -969,7 +969,6 @@
                                 ${tagsHTML}
                                 <div class="card-meta">
                                     <span><i class="far fa-calendar-alt"></i> ${date.toLocaleDateString('ar-EG')}</span>
-                                    <span><i class="far fa-eye"></i> ${(news.views || 0).toLocaleString()}</span>
                                 </div>
                             </div>
                         </a>
