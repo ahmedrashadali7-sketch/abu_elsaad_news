@@ -66,8 +66,12 @@
     </script>
     
     <!-- Font Awesome -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
+    
+    <!-- Google Fonts - مع تحسين CLS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
@@ -98,12 +102,65 @@
             --transition: all 0.3s ease;
         }
 
+        /* منع اهتزاز الخطوط أثناء التحميل (تحسين CLS) */
         body {
-            font-family: 'Cairo', sans-serif;
+            font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
             background: var(--bg-light);
             color: var(--text-dark);
             line-height: 1.6;
             overflow-x: hidden;
+            font-display: swap;
+        }
+
+        /* تحديد ارتفاعات ثابتة لمنع اهتزاز المحتوى (تحسين CLS) */
+        .news-section {
+            min-height: 600px;
+        }
+
+        .news-grid {
+            min-height: 400px;
+        }
+
+        .loading {
+            min-height: 300px;
+        }
+
+        .main-sections, .categories {
+            min-height: 70px;
+        }
+
+        .hero-slider {
+            min-height: 350px;
+        }
+
+        /* منع اهتزاز الصور أثناء التحميل */
+        .card-image {
+            background: linear-gradient(135deg, var(--secondary-color), var(--secondary-light));
+            aspect-ratio: 16 / 9;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s;
+        }
+
+        /* إطار ثابت للشريط العاجل */
+        .breaking-news {
+            min-height: 60px;
+        }
+
+        /* إطار ثابت للفوتر */
+        .footer {
+            clear: both;
+            position: relative;
+            margin-top: 60px;
         }
 
         .header {
@@ -175,6 +232,7 @@
             padding: 12px 0;
             overflow: hidden;
             position: relative;
+            min-height: 60px;
         }
 
         .breaking-news::before {
@@ -249,6 +307,7 @@
             max-width: 1400px;
             margin: 30px auto;
             padding: 0 20px;
+            min-height: 350px;
         }
 
         .slider-container {
@@ -338,6 +397,7 @@
             gap: 12px;
             flex-wrap: wrap;
             justify-content: center;
+            min-height: 70px;
         }
 
         .section-filter {
@@ -379,6 +439,7 @@
             gap: 10px;
             flex-wrap: wrap;
             justify-content: center;
+            min-height: 70px;
         }
 
         .category-filter {
@@ -417,6 +478,7 @@
             max-width: 1400px;
             margin: 20px auto;
             padding: 0 20px;
+            min-height: 600px;
         }
 
         .section-header {
@@ -448,6 +510,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 25px;
+            min-height: 400px;
         }
 
         .news-card {
@@ -471,7 +534,7 @@
 
         .card-image {
             position: relative;
-            height: 200px;
+            aspect-ratio: 16 / 9;
             overflow: hidden;
             background: linear-gradient(135deg, var(--secondary-color), var(--secondary-light));
         }
@@ -481,6 +544,9 @@
             height: 100%;
             object-fit: cover;
             transition: transform 0.4s;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
         .news-card:hover .card-image img {
@@ -597,6 +663,8 @@
             color: white;
             padding: 50px 0 20px;
             margin-top: 60px;
+            clear: both;
+            position: relative;
         }
 
         .footer-content {
@@ -725,6 +793,7 @@
             text-align: center;
             padding: 60px;
             grid-column: 1 / -1;
+            min-height: 300px;
         }
 
         .spinner {
@@ -958,7 +1027,6 @@
     <script>
         // تحميل Firebase بعد تحميل الصفحة بالكامل
         (function() {
-            // تحميل Firebase SDK ديناميكياً
             function loadScript(src, callback) {
                 var script = document.createElement('script');
                 script.src = src;
@@ -967,318 +1035,269 @@
                 document.head.appendChild(script);
             }
 
-            // بدء تحميل Firebase بعد أن تصبح الصفحة جاهزة
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', function() {
-                    loadScript('https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js', function() {
-                        loadScript('https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js', function() {
-                            // بعد تحميل Firebase، قم بتهيئته
-                            const firebaseConfig = {
-                                apiKey: "AIzaSyBiLnQKblUsRxmz6rUWAb7RpbFUakeWX_E",
-                                authDomain: "abu-el-saad-news.firebaseapp.com",
-                                projectId: "abu-el-saad-news",
-                                storageBucket: "abu-el-saad-news.firebasestorage.app",
-                                messagingSenderId: "127394884030",
-                                appId: "1:127394884030:web:52a31322a180bc717931ef"
-                            };
-                            
-                            firebase.initializeApp(firebaseConfig);
-                            const db = firebase.firestore();
-                            
-                            // تشغيل دوال الموقع بعد تحميل Firebase
-                            startApp(db);
-                        });
-                    });
-                });
-            } else {
-                loadScript('https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js', function() {
-                    loadScript('https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js', function() {
-                        const firebaseConfig = {
-                            apiKey: "AIzaSyBiLnQKblUsRxmz6rUWAb7RpbFUakeWX_E",
-                            authDomain: "abu-el-saad-news.firebaseapp.com",
-                            projectId: "abu-el-saad-news",
-                            storageBucket: "abu-el-saad-news.firebasestorage.app",
-                            messagingSenderId: "127394884030",
-                            appId: "1:127394884030:web:52a31322a180bc717931ef"
-                        };
-                        
-                        firebase.initializeApp(firebaseConfig);
-                        const db = firebase.firestore();
-                        startApp(db);
-                    });
-                });
-            }
+            function startApp(db) {
+                let currentSection = 'all';
+                let currentCategory = 'all';
 
-            // دوال الموقع الرئيسية
-            let currentSection = 'all';
-            let currentCategory = 'all';
-
-            function escapeHtml(text) {
-                if (!text) return '';
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
-            }
-
-            async function loadBreakingNewsFromFirestore(db) {
-                try {
-                    const breakingDoc = await db.collection('breaking').doc('current').get();
-                    
-                    const breakingNewsDiv = document.getElementById('breakingNews');
-                    const breakingText = document.getElementById('breakingText');
-                    
-                    if (breakingDoc.exists) {
-                        const breakingData = breakingDoc.data();
-                        const breakingTextContent = breakingData.text;
-                        
-                        if (breakingTextContent && breakingTextContent.trim() !== '') {
-                            breakingNewsDiv.style.display = 'block';
-                            breakingText.innerHTML = `
-                                <i class="fas fa-bell" style="animation: pulse 1s infinite; margin-left: 10px;"></i>
-                                <strong style="color: #fff; background: rgba(0,0,0,0.3); padding: 3px 10px; border-radius: 20px; margin-left: 10px;">
-                                    تحديث جديد
-                                </strong>
-                                ${escapeHtml(breakingTextContent)}
-                            `;
-                            
-                            breakingText.style.animation = 'none';
-                            setTimeout(() => {
-                                breakingText.style.animation = 'slideInRight 0.5s ease';
-                            }, 10);
-                            
-                            console.log('✅ تم تحميل الخبر العاجل:', breakingTextContent);
-                        } else {
-                            breakingNewsDiv.style.display = 'none';
-                        }
-                    } else {
-                        const fallbackNews = await db.collection('news').orderBy('createdAt', 'desc').limit(1).get();
-                        if (!fallbackNews.empty) {
-                            const latestNews = fallbackNews.docs[0].data();
-                            breakingNewsDiv.style.display = 'block';
-                            breakingText.innerHTML = `
-                                <i class="fas fa-newspaper" style="margin-left: 10px;"></i>
-                                آخر الأخبار: ${escapeHtml(latestNews.title)}
-                            `;
-                        } else {
-                            breakingNewsDiv.style.display = 'none';
-                        }
-                    }
-                } catch (error) {
-                    console.error('❌ خطأ في تحميل الخبر العاجل:', error);
-                    try {
-                        const fallbackNews = await db.collection('news').orderBy('createdAt', 'desc').limit(1).get();
-                        if (!fallbackNews.empty) {
-                            const latestNews = fallbackNews.docs[0].data();
-                            const breakingNewsDiv = document.getElementById('breakingNews');
-                            const breakingText = document.getElementById('breakingText');
-                            breakingNewsDiv.style.display = 'block';
-                            breakingText.innerHTML = `<i class="fas fa-newspaper"></i> آخر الأخبار: ${escapeHtml(latestNews.title)}`;
-                        }
-                    } catch (e) {
-                        console.error('فشل تحميل البديل:', e);
-                    }
+                function escapeHtml(text) {
+                    if (!text) return '';
+                    const div = document.createElement('div');
+                    div.textContent = text;
+                    return div.innerHTML;
                 }
-            }
 
-            function listenToBreakingNewsRealtime(db) {
-                db.collection('breaking').doc('current')
-                    .onSnapshot((doc) => {
+                async function loadBreakingNewsFromFirestore(db) {
+                    try {
+                        const breakingDoc = await db.collection('breaking').doc('current').get();
+                        
                         const breakingNewsDiv = document.getElementById('breakingNews');
                         const breakingText = document.getElementById('breakingText');
                         
-                        if (doc.exists) {
-                            const breakingData = doc.data();
+                        if (breakingDoc.exists) {
+                            const breakingData = breakingDoc.data();
                             const breakingTextContent = breakingData.text;
                             
                             if (breakingTextContent && breakingTextContent.trim() !== '') {
                                 breakingNewsDiv.style.display = 'block';
                                 breakingText.innerHTML = `
                                     <i class="fas fa-bell" style="animation: pulse 1s infinite; margin-left: 10px;"></i>
-                                    <strong style="background: #dc2626; padding: 4px 12px; border-radius: 20px; margin-left: 10px; font-size: 0.85rem;">
-                                        🔴 عاجل
+                                    <strong style="color: #fff; background: rgba(0,0,0,0.3); padding: 3px 10px; border-radius: 20px; margin-left: 10px;">
+                                        تحديث جديد
                                     </strong>
                                     ${escapeHtml(breakingTextContent)}
                                 `;
                                 
-                                breakingNewsDiv.style.animation = 'none';
+                                breakingText.style.animation = 'none';
                                 setTimeout(() => {
-                                    breakingNewsDiv.style.animation = 'shake 0.5s ease';
+                                    breakingText.style.animation = 'slideInRight 0.5s ease';
                                 }, 10);
                                 
-                                console.log('🔄 تحديث فوري للخبر العاجل:', breakingTextContent);
+                                console.log('✅ تم تحميل الخبر العاجل:', breakingTextContent);
                             } else {
                                 breakingNewsDiv.style.display = 'none';
                             }
                         } else {
-                            breakingNewsDiv.style.display = 'none';
+                            const fallbackNews = await db.collection('news').orderBy('createdAt', 'desc').limit(1).get();
+                            if (!fallbackNews.empty) {
+                                const latestNews = fallbackNews.docs[0].data();
+                                breakingNewsDiv.style.display = 'block';
+                                breakingText.innerHTML = `
+                                    <i class="fas fa-newspaper" style="margin-left: 10px;"></i>
+                                    آخر الأخبار: ${escapeHtml(latestNews.title)}
+                                `;
+                            } else {
+                                breakingNewsDiv.style.display = 'none';
+                            }
                         }
-                    }, (error) => {
-                        console.error('❌ خطأ في الاستماع المباشر:', error);
-                    });
-            }
-
-            async function loadNews(db, section = 'all', category = 'all') {
-                const newsGrid = document.getElementById('newsGrid');
-                newsGrid.innerHTML = `<div class="loading"><div class="spinner"></div><p>جاري تحميل الأخبار...</p></div>`;
-
-                try {
-                    const snapshot = await db.collection('news').orderBy('createdAt', 'desc').get();
-
-                    if (snapshot.empty) {
-                        newsGrid.innerHTML = '<div class="no-news">📭 لا توجد أخبار حالياً</div>';
-                        return;
+                    } catch (error) {
+                        console.error('❌ خطأ في تحميل الخبر العاجل:', error);
+                        try {
+                            const fallbackNews = await db.collection('news').orderBy('createdAt', 'desc').limit(1).get();
+                            if (!fallbackNews.empty) {
+                                const latestNews = fallbackNews.docs[0].data();
+                                const breakingNewsDiv = document.getElementById('breakingNews');
+                                const breakingText = document.getElementById('breakingText');
+                                breakingNewsDiv.style.display = 'block';
+                                breakingText.innerHTML = `<i class="fas fa-newspaper"></i> آخر الأخبار: ${escapeHtml(latestNews.title)}`;
+                            }
+                        } catch (e) {
+                            console.error('فشل تحميل البديل:', e);
+                        }
                     }
+                }
 
-                    let allNews = [];
-                    snapshot.forEach((doc) => {
-                        const data = doc.data();
-                        allNews.push({ 
-                            id: doc.id, 
-                            ...data,
-                            section: data.section || 'main',
-                            category: data.category || 'عام',
-                            tags: data.tags || []
+                function listenToBreakingNewsRealtime(db) {
+                    db.collection('breaking').doc('current')
+                        .onSnapshot((doc) => {
+                            const breakingNewsDiv = document.getElementById('breakingNews');
+                            const breakingText = document.getElementById('breakingText');
+                            
+                            if (doc.exists) {
+                                const breakingData = doc.data();
+                                const breakingTextContent = breakingData.text;
+                                
+                                if (breakingTextContent && breakingTextContent.trim() !== '') {
+                                    breakingNewsDiv.style.display = 'block';
+                                    breakingText.innerHTML = `
+                                        <i class="fas fa-bell" style="animation: pulse 1s infinite; margin-left: 10px;"></i>
+                                        <strong style="background: #dc2626; padding: 4px 12px; border-radius: 20px; margin-left: 10px; font-size: 0.85rem;">
+                                            🔴 عاجل
+                                        </strong>
+                                        ${escapeHtml(breakingTextContent)}
+                                    `;
+                                    
+                                    breakingNewsDiv.style.animation = 'none';
+                                    setTimeout(() => {
+                                        breakingNewsDiv.style.animation = 'shake 0.5s ease';
+                                    }, 10);
+                                    
+                                    console.log('🔄 تحديث فوري للخبر العاجل:', breakingTextContent);
+                                } else {
+                                    breakingNewsDiv.style.display = 'none';
+                                }
+                            } else {
+                                breakingNewsDiv.style.display = 'none';
+                            }
+                        }, (error) => {
+                            console.error('❌ خطأ في الاستماع المباشر:', error);
                         });
-                    });
+                }
 
-                    if (section !== 'all') {
-                        allNews = allNews.filter(news => (news.section || 'main') === section);
+                async function loadNews(db, section = 'all', category = 'all') {
+                    const newsGrid = document.getElementById('newsGrid');
+                    newsGrid.innerHTML = `<div class="loading"><div class="spinner"></div><p>جاري تحميل الأخبار...</p></div>`;
+
+                    try {
+                        const snapshot = await db.collection('news').orderBy('createdAt', 'desc').get();
+
+                        if (snapshot.empty) {
+                            newsGrid.innerHTML = '<div class="no-news">📭 لا توجد أخبار حالياً</div>';
+                            return;
+                        }
+
+                        let allNews = [];
+                        snapshot.forEach((doc) => {
+                            const data = doc.data();
+                            allNews.push({ 
+                                id: doc.id, 
+                                ...data,
+                                section: data.section || 'main',
+                                category: data.category || 'عام',
+                                tags: data.tags || []
+                            });
+                        });
+
+                        if (section !== 'all') {
+                            allNews = allNews.filter(news => (news.section || 'main') === section);
+                        }
+
+                        if (category !== 'all') {
+                            allNews = allNews.filter(news => news.category === category);
+                        }
+
+                        if (allNews.length === 0) {
+                            newsGrid.innerHTML = '<div class="no-news">📭 لا توجد أخبار في هذا القسم</div>';
+                            return;
+                        }
+
+                        let html = '';
+                        const featuredNews = [];
+
+                        allNews.forEach((news, index) => {
+                            const date = news.createdAt ? news.createdAt.toDate() : new Date();
+                            
+                            if (featuredNews.length < 3 && section === 'all' && category === 'all') {
+                                featuredNews.push(news);
+                            }
+
+                            let sectionName = '';
+                            switch(news.section || 'main') {
+                                case 'main': sectionName = 'عامة'; break;
+                                case 'local': sectionName = 'محليات'; break;
+                                case 'international': sectionName = 'عالمي'; break;
+                                case 'exclusive': sectionName = 'حصريات'; break;
+                                default: sectionName = 'أخبار';
+                            }
+
+                            let tagsHTML = '';
+                            if (news.tags && news.tags.length > 0) {
+                                const first3Tags = news.tags.slice(0, 3);
+                                tagsHTML = `
+                                    <div class="card-tags">
+                                        ${first3Tags.map(tag => `<span class="card-tag">${escapeHtml(tag)}</span>`).join('')}
+                                    </div>
+                                `;
+                            }
+
+                            html += `
+                                <a href="article.html?id=${news.id}" class="news-card">
+                                    <div class="card-image">
+                                        <img src="${news.image || 'https://via.placeholder.com/800x400/C49A6C/FFFFFF?text=أبو+السعد'}" 
+                                             alt="${escapeHtml(news.title)}"
+                                             loading="lazy"
+                                             onerror="this.src='https://via.placeholder.com/800x400/C49A6C/FFFFFF?text=صورة'">
+                                        <span class="card-category">${escapeHtml(news.category || 'عام')}</span>
+                                        <span class="card-section">${sectionName}</span>
+                                    </div>
+                                    <div class="card-content">
+                                        <h3 class="card-title">${escapeHtml(news.title)}</h3>
+                                        <p class="card-excerpt">${escapeHtml(news.excerpt || '')}</p>
+                                        ${tagsHTML}
+                                        <div class="card-meta">
+                                            <span><i class="far fa-calendar-alt"></i> ${date.toLocaleDateString('ar-EG')}</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            `;
+                        });
+
+                        newsGrid.innerHTML = html;
+
+                        if (section === 'all' && category === 'all') {
+                            updateSlider(featuredNews);
+                        }
+
+                    } catch (error) {
+                        console.error('خطأ:', error);
+                        newsGrid.innerHTML = '<div class="no-news" style="color: #dc2626;">⚠️ حدث خطأ في تحميل الأخبار</div>';
                     }
+                }
 
-                    if (category !== 'all') {
-                        allNews = allNews.filter(news => news.category === category);
-                    }
+                function updateSlider(news) {
+                    const heroSlider = document.getElementById('heroSlider');
+                    const slidesContainer = document.getElementById('slidesContainer');
+                    const sliderDots = document.getElementById('sliderDots');
 
-                    if (allNews.length === 0) {
-                        newsGrid.innerHTML = '<div class="no-news">📭 لا توجد أخبار في هذا القسم</div>';
+                    if (news.length === 0) {
+                        heroSlider.style.display = 'none';
                         return;
                     }
 
-                    let html = '';
-                    const featuredNews = [];
+                    heroSlider.style.display = 'block';
+                    slidesContainer.innerHTML = '';
+                    sliderDots.innerHTML = '';
 
-                    allNews.forEach((news, index) => {
-                        const date = news.createdAt ? news.createdAt.toDate() : new Date();
-                        
-                        if (featuredNews.length < 3 && section === 'all' && category === 'all') {
-                            featuredNews.push(news);
-                        }
-
-                        let sectionName = '';
-                        switch(news.section || 'main') {
-                            case 'main': sectionName = 'عامة'; break;
-                            case 'local': sectionName = 'محليات'; break;
-                            case 'international': sectionName = 'عالمي'; break;
-                            case 'exclusive': sectionName = 'حصريات'; break;
-                            default: sectionName = 'أخبار';
-                        }
-
-                        let tagsHTML = '';
-                        if (news.tags && news.tags.length > 0) {
-                            const first3Tags = news.tags.slice(0, 3);
-                            tagsHTML = `
-                                <div class="card-tags">
-                                    ${first3Tags.map(tag => `<span class="card-tag">${escapeHtml(tag)}</span>`).join('')}
-                                </div>
-                            `;
-                        }
-
-                        html += `
-                            <a href="article.html?id=${news.id}" class="news-card">
-                                <div class="card-image">
-                                    <img src="${news.image || 'https://via.placeholder.com/800x400/C49A6C/FFFFFF?text=أبو+السعد'}" 
-                                         alt="${escapeHtml(news.title)}"
-                                         loading="lazy"
-                                         onerror="this.src='https://via.placeholder.com/800x400/C49A6C/FFFFFF?text=صورة'">
-                                    <span class="card-category">${escapeHtml(news.category || 'عام')}</span>
-                                    <span class="card-section">${sectionName}</span>
-                                </div>
-                                <div class="card-content">
-                                    <h3 class="card-title">${escapeHtml(news.title)}</h3>
-                                    <p class="card-excerpt">${escapeHtml(news.excerpt || '')}</p>
-                                    ${tagsHTML}
-                                    <div class="card-meta">
-                                        <span><i class="far fa-calendar-alt"></i> ${date.toLocaleDateString('ar-EG')}</span>
-                                    </div>
-                                </div>
-                            </a>
+                    news.forEach((item, index) => {
+                        const slide = document.createElement('div');
+                        slide.className = `slide ${index === 0 ? 'active' : ''}`;
+                        slide.innerHTML = `
+                            <img src="${item.image || 'https://via.placeholder.com/1200x500/C49A6C/FFFFFF?text=أبو+السعد'}" alt="${escapeHtml(item.title)}">
+                            <div class="slide-content">
+                                <span class="slide-category">${escapeHtml(item.category)}</span>
+                                <h2 class="slide-title">${escapeHtml(item.title)}</h2>
+                            </div>
                         `;
+                        slidesContainer.appendChild(slide);
+
+                        const dot = document.createElement('span');
+                        dot.className = `dot ${index === 0 ? 'active' : ''}`;
+                        dot.onclick = () => goToSlide(index);
+                        sliderDots.appendChild(dot);
                     });
 
-                    newsGrid.innerHTML = html;
-
-                    if (section === 'all' && category === 'all') {
-                        updateSlider(featuredNews);
-                    }
-
-                } catch (error) {
-                    console.error('خطأ:', error);
-                    newsGrid.innerHTML = '<div class="no-news" style="color: #dc2626;">⚠️ حدث خطأ في تحميل الأخبار</div>';
-                }
-            }
-
-            function updateSlider(news) {
-                const heroSlider = document.getElementById('heroSlider');
-                const slidesContainer = document.getElementById('slidesContainer');
-                const sliderDots = document.getElementById('sliderDots');
-
-                if (news.length === 0) {
-                    heroSlider.style.display = 'none';
-                    return;
+                    let currentSlide = 0;
+                    setInterval(() => {
+                        const slides = document.querySelectorAll('.slide');
+                        const dots = document.querySelectorAll('.dot');
+                        if (slides.length === 0) return;
+                        
+                        slides[currentSlide].classList.remove('active');
+                        dots[currentSlide].classList.remove('active');
+                        currentSlide = (currentSlide + 1) % slides.length;
+                        slides[currentSlide].classList.add('active');
+                        dots[currentSlide].classList.add('active');
+                    }, 5000);
                 }
 
-                heroSlider.style.display = 'block';
-                slidesContainer.innerHTML = '';
-                sliderDots.innerHTML = '';
-
-                news.forEach((item, index) => {
-                    const slide = document.createElement('div');
-                    slide.className = `slide ${index === 0 ? 'active' : ''}`;
-                    slide.innerHTML = `
-                        <img src="${item.image || 'https://via.placeholder.com/1200x500/C49A6C/FFFFFF?text=أبو+السعد'}" alt="${escapeHtml(item.title)}">
-                        <div class="slide-content">
-                            <span class="slide-category">${escapeHtml(item.category)}</span>
-                            <h2 class="slide-title">${escapeHtml(item.title)}</h2>
-                        </div>
-                    `;
-                    slidesContainer.appendChild(slide);
-
-                    const dot = document.createElement('span');
-                    dot.className = `dot ${index === 0 ? 'active' : ''}`;
-                    dot.onclick = () => goToSlide(index);
-                    sliderDots.appendChild(dot);
-                });
-
-                let currentSlide = 0;
-                setInterval(() => {
+                function goToSlide(index) {
                     const slides = document.querySelectorAll('.slide');
                     const dots = document.querySelectorAll('.dot');
-                    if (slides.length === 0) return;
-                    
-                    slides[currentSlide].classList.remove('active');
-                    dots[currentSlide].classList.remove('active');
-                    currentSlide = (currentSlide + 1) % slides.length;
-                    slides[currentSlide].classList.add('active');
-                    dots[currentSlide].classList.add('active');
-                }, 5000);
-            }
+                    slides.forEach(s => s.classList.remove('active'));
+                    dots.forEach(d => d.classList.remove('active'));
+                    slides[index].classList.add('active');
+                    dots[index].classList.add('active');
+                }
 
-            function goToSlide(index) {
-                const slides = document.querySelectorAll('.slide');
-                const dots = document.querySelectorAll('.dot');
-                slides.forEach(s => s.classList.remove('active'));
-                dots.forEach(d => d.classList.remove('active'));
-                slides[index].classList.add('active');
-                dots[index].classList.add('active');
-            }
-
-            function startApp(db) {
-                // بدء التطبيق بعد تحميل Firebase
-                listenToBreakingNewsRealtime(db);
-                loadBreakingNewsFromFirestore(db);
-                loadNews(db, 'all', 'all');
-                
-                // تعريف الدوال العامة بعد تحميل Firebase
                 window.filterBySection = function(section) {
                     currentSection = section;
                     document.querySelectorAll('.section-filter').forEach(el => el.classList.remove('active'));
@@ -1307,19 +1326,63 @@
                     document.getElementById('sectionTitle').textContent = title;
                     loadNews(db, currentSection, category);
                 };
+
+                // بدء التطبيق
+                listenToBreakingNewsRealtime(db);
+                loadBreakingNewsFromFirestore(db);
+                loadNews(db, 'all', 'all');
             }
 
-            // دوال السكرول
-            window.addEventListener('scroll', () => {
-                const btn = document.getElementById('backToTop');
-                if (window.scrollY > 500) btn.classList.add('show');
-                else btn.classList.remove('show');
-            });
-
-            document.getElementById('backToTop').addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
+            // بدء تحميل Firebase بعد أن تصبح الصفحة جاهزة
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    loadScript('https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js', function() {
+                        loadScript('https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js', function() {
+                            const firebaseConfig = {
+                                apiKey: "AIzaSyBiLnQKblUsRxmz6rUWAb7RpbFUakeWX_E",
+                                authDomain: "abu-el-saad-news.firebaseapp.com",
+                                projectId: "abu-el-saad-news",
+                                storageBucket: "abu-el-saad-news.firebasestorage.app",
+                                messagingSenderId: "127394884030",
+                                appId: "1:127394884030:web:52a31322a180bc717931ef"
+                            };
+                            
+                            firebase.initializeApp(firebaseConfig);
+                            const db = firebase.firestore();
+                            startApp(db);
+                        });
+                    });
+                });
+            } else {
+                loadScript('https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js', function() {
+                    loadScript('https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js', function() {
+                        const firebaseConfig = {
+                            apiKey: "AIzaSyBiLnQKblUsRxmz6rUWAb7RpbFUakeWX_E",
+                            authDomain: "abu-el-saad-news.firebaseapp.com",
+                            projectId: "abu-el-saad-news",
+                            storageBucket: "abu-el-saad-news.firebasestorage.app",
+                            messagingSenderId: "127394884030",
+                            appId: "1:127394884030:web:52a31322a180bc717931ef"
+                        };
+                        
+                        firebase.initializeApp(firebaseConfig);
+                        const db = firebase.firestore();
+                        startApp(db);
+                    });
+                });
+            }
         })();
+
+        // دوال السكرول
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('backToTop');
+            if (window.scrollY > 500) btn.classList.add('show');
+            else btn.classList.remove('show');
+        });
+
+        document.getElementById('backToTop').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
     </script>
 </body>
 </html>
