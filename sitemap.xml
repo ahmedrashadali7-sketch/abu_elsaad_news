@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
   <url>
-    <loc>https://abu-el-saad-news.web.app/index.html</loc>
-    <lastmod>2026-04-06</lastmod>
+    <loc>https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/index.html</loc>
+    <lastmod>2026-04-06T22:37:35+03:00</lastmod>
     <changefreq>hourly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://abu-el-saad-news.web.app/article.html?id=Ddh9YpDObOi14BHUQQw7</loc>
-    <lastmod>2026-04-06</lastmod>
+    <loc>https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/article.html?id=Ddh9YpDObOi14BHUQQw7</loc>
+    <lastmod>2026-04-06T14:10:44+03:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -31,8 +29,8 @@
   </url>
 
   <url>
-    <loc>https://abu-el-saad-news.web.app/article.html?id=Fj6cH3AXVzY3MPavCDmi</loc>
-    <lastmod>2026-04-06</lastmod>
+    <loc>https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/article.html?id=Fj6cH3AXVzY3MPavCDmi</loc>
+    <lastmod>2026-04-06T13:01:17+03:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -51,8 +49,8 @@
   </url>
 
   <url>
-    <loc>https://abu-el-saad-news.web.app/article.html?id=62vmJvQvCR0u2LkNcOGI</loc>
-    <lastmod>2026-04-06</lastmod>
+    <loc>https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/article.html?id=62vmJvQvCR0u2LkNcOGI</loc>
+    <lastmod>2026-04-06T12:09:11+03:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -71,8 +69,8 @@
   </url>
 
   <url>
-    <loc>https://abu-el-saad-news.web.app/article.html?id=5fPotwgVNc2WfqmHF16d</loc>
-    <lastmod>2026-04-03</lastmod>
+    <loc>https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/article.html?id=5fPotwgVNc2WfqmHF16d</loc>
+    <lastmod>2026-04-03T07:48:47+03:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -91,8 +89,8 @@
   </url>
 
   <url>
-    <loc>https://abu-el-saad-news.web.app/article.html?id=D1qARTRXQCkQESdrFXfc</loc>
-    <lastmod>2026-04-02</lastmod>
+    <loc>https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/article.html?id=D1qARTRXQCkQESdrFXfc</loc>
+    <lastmod>2026-04-02T12:33:53+03:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -111,8 +109,8 @@
   </url>
 
   <url>
-    <loc>https://abu-el-saad-news.web.app/article.html?id=0quBlkrgND5QPUsfvaDV</loc>
-    <lastmod>2026-04-01</lastmod>
+    <loc>https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/article.html?id=0quBlkrgND5QPUsfvaDV</loc>
+    <lastmod>2026-04-01T21:40:56+03:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -131,8 +129,8 @@
   </url>
 
   <url>
-    <loc>https://abu-el-saad-news.web.app/article.html?id=PeITG0hmrp11I33pHmfU</loc>
-    <lastmod>2026-04-01</lastmod>
+    <loc>https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/article.html?id=PeITG0hmrp11I33pHmfU</loc>
+    <lastmod>2026-04-01T20:57:24+03:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -151,8 +149,8 @@
   </url>
 
   <url>
-    <loc>https://abu-el-saad-news.web.app/article.html?id=8Cl0jNGRurTcLDRLYAFr</loc>
-    <lastmod>2026-04-01</lastmod>
+    <loc>https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/article.html?id=8Cl0jNGRurTcLDRLYAFr</loc>
+    <lastmod>2026-04-01T19:40:51+03:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
