@@ -9,6 +9,7 @@
     <meta name="description" content="" id="metaDescription">
     <meta name="keywords" content="" id="metaKeywords">
     <meta name="author" content="" id="metaAuthor">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
     
     <!-- Open Graph Tags -->
     <meta property="og:title" content="" id="ogTitle">
@@ -23,6 +24,17 @@
     <meta name="twitter:title" content="" id="twitterTitle">
     <meta name="twitter:description" content="" id="twitterDescription">
     <meta name="twitter:image" content="" id="twitterImage">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" id="canonicalUrl" href="">
+    
+    <!-- RSS Feed -->
+    <link rel="alternate" type="application/rss+xml" title="أبو السعد للاخبار - RSS" href="/rss.xml">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#C49A6C">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23C49A6C'/%3E%3Ctext x='50' y='67' font-size='50' text-anchor='middle' fill='white' font-family='Arial'%3Eأ%3C/text%3E%3C/svg%3E">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -61,7 +73,6 @@
             line-height: 1.8;
         }
 
-        /* ===== الهيدر ===== */
         .header {
             background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
             color: white;
@@ -97,14 +108,12 @@
             color: var(--primary);
         }
 
-        /* ===== الحاوية الرئيسية ===== */
         .container {
             max-width: 900px;
             margin: 40px auto;
             padding: 0 20px;
         }
 
-        /* ===== بطاقة المقال ===== */
         .article-card {
             background: var(--white);
             border-radius: var(--radius);
@@ -129,7 +138,6 @@
             box-shadow: var(--shadow-hover);
         }
 
-        /* رأس المقال */
         .article-header {
             padding: 40px 40px 25px;
             background: linear-gradient(to bottom, #fff, #fefefe);
@@ -201,7 +209,6 @@
             color: var(--primary);
         }
 
-        /* صورة المقال */
         .article-image-container {
             padding: 0 40px;
             margin: 30px 0;
@@ -220,7 +227,6 @@
             transform: scale(1.02);
         }
 
-        /* محتوى المقال */
         .article-content {
             padding: 0 40px 40px;
             font-size: 1.1rem;
@@ -269,7 +275,6 @@
             color: #555;
         }
 
-        /* تذييل المقال */
         .article-footer {
             padding: 35px 40px;
             background: linear-gradient(135deg, #fafbfc, #ffffff);
@@ -344,7 +349,6 @@
             transform: translateX(-5px);
         }
 
-        /* حالات التحميل والخطأ */
         .loading, .error {
             text-align: center;
             padding: 100px 20px;
@@ -372,7 +376,6 @@
             font-size: 1.5rem;
         }
 
-        /* الفوتر */
         .footer {
             background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
             color: white;
@@ -397,7 +400,6 @@
             color: white;
         }
 
-        /* زر العودة للأعلى */
         .scroll-top {
             position: fixed;
             bottom: 30px;
@@ -428,7 +430,6 @@
             transform: translateY(-5px);
         }
         
-        /* إخفاء الكلمات المفتاحية عن المستخدمين ولكن تبقى في الكود لجوجل */
         .seo-tags-hidden {
             display: none !important;
             visibility: hidden !important;
@@ -439,7 +440,6 @@
             z-index: -999 !important;
         }
 
-        /* تجاوب */
         @media (max-width: 768px) {
             .logo { font-size: 1.8rem; }
             
@@ -517,20 +517,26 @@
         </div>
     </footer>
 
-    <!-- زر العودة للأعلى -->
     <div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
         <i class="fas fa-arrow-up"></i>
     </div>
 
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    
-    <!-- ملف الإعدادات -->
-    <script src="js/firebase-config.js"></script>
 
     <script>
-        // زر العودة للأعلى
+        const firebaseConfig = {
+            apiKey: "AIzaSyBiLnQKblUsRxmz6rUWAb7RpbFUakeWX_E",
+            authDomain: "abu-el-saad-news.firebaseapp.com",
+            projectId: "abu-el-saad-news",
+            storageBucket: "abu-el-saad-news.firebasestorage.app",
+            messagingSenderId: "127394884030",
+            appId: "1:127394884030:web:52a31322a180bc717931ef"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         window.addEventListener('scroll', function() {
             const scrollTop = document.getElementById('scrollTop');
             if (window.pageYOffset > 300) {
@@ -540,207 +546,205 @@
             }
         });
 
-        // التأكد من تحميل Firebase
-        if (typeof firebase === 'undefined') {
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function updateCanonicalAndBreadcrumb(newsTitle, category) {
+            const canonical = document.getElementById('canonicalUrl');
+            if (canonical) {
+                canonical.href = window.location.href;
+            }
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const newsId = urlParams.get('id');
+
+        if (!newsId) {
             document.getElementById('articleContainer').innerHTML = `
                 <div class="error">
-                    <i class="fas fa-database" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
-                    <h3>❌ خطأ في تحميل Firebase</h3>
-                    <p>تأكد من وجود ملف js/firebase-config.js</p>
+                    <i class="fas fa-search" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
+                    <h3>❌ الخبر غير موجود</h3>
+                    <p>لم يتم العثور على الخبر المطلوب</p>
                     <a href="index.html" class="back-link" style="margin-top: 20px;">← العودة للرئيسية</a>
                 </div>
             `;
         } else {
-            const db = firebase.firestore();
-            const urlParams = new URLSearchParams(window.location.search);
-            const newsId = urlParams.get('id');
-
-            if (!newsId) {
-                document.getElementById('articleContainer').innerHTML = `
-                    <div class="error">
-                        <i class="fas fa-search" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
-                        <h3>❌ الخبر غير موجود</h3>
-                        <p>لم يتم العثور على الخبر المطلوب</p>
-                        <a href="index.html" class="back-link" style="margin-top: 20px;">← العودة للرئيسية</a>
-                    </div>
-                `;
-            } else {
-                db.collection('news').doc(newsId).get()
-                    .then((doc) => {
-                        if (!doc.exists) {
-                            document.getElementById('articleContainer').innerHTML = `
-                                <div class="error">
-                                    <i class="fas fa-newspaper" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
-                                    <h3>❌ الخبر غير موجود</h3>
-                                    <p>عذراً، هذا الخبر قد يكون تم حذفه أو نقله</p>
-                                    <a href="index.html" class="back-link" style="margin-top: 20px;">← العودة للرئيسية</a>
-                                </div>
-                            `;
-                            return;
-                        }
-
-                        const news = doc.data();
-                        const date = news.createdAt ? news.createdAt.toDate() : new Date();
-                        
-                        // الحصول على الكلمات المفتاحية
-                        const tags = news.tags || [];
-                        
-                        // تحديث SEO Meta Tags
-                        const metaDescription = news.excerpt || news.title;
-                        const metaKeywords = tags.join(', ');
-                        const currentUrl = window.location.href;
-                        
-                        document.title = `${news.title} - أبو السعد للاخبار`;
-                        
-                        // تحديث meta tags ديناميكياً
-                        const setMeta = (id, content) => {
-                            const el = document.getElementById(id);
-                            if (el) el.setAttribute('content', content);
-                        };
-                        
-                        setMeta('metaDescription', metaDescription.substring(0, 160));
-                        setMeta('metaKeywords', metaKeywords);
-                        setMeta('metaAuthor', news.author || 'أبو السعد للاخبار');
-                        setMeta('ogTitle', news.title);
-                        setMeta('ogDescription', metaDescription.substring(0, 200));
-                        setMeta('ogImage', news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد');
-                        setMeta('ogUrl', currentUrl);
-                        setMeta('twitterTitle', news.title);
-                        setMeta('twitterDescription', metaDescription.substring(0, 200));
-                        setMeta('twitterImage', news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد');
-
-                        // تحديث المشاهدات
-                        db.collection('news').doc(newsId).update({
-                            views: (news.views || 0) + 1
-                        }).catch(() => {});
-
-                        // تنسيق التاريخ
-                        const formattedDate = date.toLocaleDateString('ar-EG', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        });
-
-                        const formattedTime = date.toLocaleTimeString('ar-EG', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-
-                        // إنشاء HTML للكلمات المفتاحية المخفية لجوجل فقط
-                        let hiddenTagsHTML = '';
-                        if (tags.length > 0) {
-                            hiddenTagsHTML = `
-                                <div class="seo-tags-hidden" aria-hidden="true">
-                                    <span class="seo-keywords">الكلمات المفتاحية: ${tags.map(t => '#' + t).join(', ')}</span>
-                                    ${tags.map(tag => `<a href="search.html?tag=${encodeURIComponent(tag)}" rel="tag" class="seo-tag">#${tag}</a>`).join('')}
-                                </div>
-                            `;
-                        }
-
-                        // عرض الخبر بدون الكلمات المفتاحية للمستخدم
-                        document.getElementById('articleContainer').innerHTML = `
-                            <article class="article-card">
-                                <div class="article-header">
-                                    <div class="article-category">
-                                        <i class="fas fa-tag"></i> ${news.category || 'عام'}
-                                    </div>
-                                    <h1 class="article-title">${news.title}</h1>
-                                    <div class="article-meta">
-                                        <div class="author-badge">
-                                            <i class="fas fa-user-edit"></i>
-                                            <span>${news.author || 'أبو السعد'}</span>
-                                        </div>
-                                        <span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
-                                        <span><i class="fas fa-clock"></i> ${formattedTime}</span>
-                                        <span><i class="fas fa-eye"></i> ${(news.views || 0) + 1} مشاهدة</span>
-                                    </div>
-                                </div>
-
-                                <div class="article-image-container">
-                                    <img src="${news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد'}" 
-                                         alt="${news.title}" 
-                                         class="article-image"
-                                         onerror="this.src='https://via.placeholder.com/800x400?text=صورة+غير+متوفرة'">
-                                </div>
-
-                                <div class="article-content">
-                                    ${news.content || ''}
-                                </div>
-
-                                <div class="article-footer">
-                                    <div class="share-section">
-                                        <div class="share-title">
-                                            <i class="fas fa-share-alt"></i>
-                                            <span>شارك هذا الخبر</span>
-                                        </div>
-                                        <div class="share-buttons">
-                                            <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" 
-                                               target="_blank" class="share-btn facebook">
-                                                <i class="fab fa-facebook-f"></i> <span>فيسبوك</span>
-                                            </a>
-                                            <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(news.title)}&url=${encodeURIComponent(window.location.href)}" 
-                                               target="_blank" class="share-btn twitter">
-                                                <i class="fab fa-twitter"></i> <span>تويتر</span>
-                                            </a>
-                                            <a href="https://wa.me/?text=${encodeURIComponent(news.title + ' ' + window.location.href)}" 
-                                               target="_blank" class="share-btn whatsapp">
-                                                <i class="fab fa-whatsapp"></i> <span>واتساب</span>
-                                            </a>
-                                            <a href="https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(news.title)}" 
-                                               target="_blank" class="share-btn telegram">
-                                                <i class="fab fa-telegram-plane"></i> <span>تليجرام</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div style="text-align: center;">
-                                        <a href="index.html" class="back-link">
-                                            <i class="fas fa-arrow-right"></i> العودة للرئيسية
-                                        </a>
-                                    </div>
-                                </div>
-                                ${hiddenTagsHTML}
-                            </article>
-                            
-                            <!-- Schema.org markup لجوجل مع الكلمات المفتاحية -->
-                            <script type="application/ld+json">
-                            {
-                                "@context": "https://schema.org",
-                                "@type": "NewsArticle",
-                                "headline": "${news.title.replace(/"/g, '\\"')}",
-                                "description": "${(news.excerpt || news.title).replace(/"/g, '\\"').substring(0, 200)}",
-                                "image": "${news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد'}",
-                                "datePublished": "${date.toISOString()}",
-                                "author": {
-                                    "@type": "Person",
-                                    "name": "${news.author || 'أبو السعد للاخبار'}"
-                                },
-                                "publisher": {
-                                    "@type": "Organization",
-                                    "name": "أبو السعد للاخبار",
-                                    "logo": {
-                                        "@type": "ImageObject",
-                                        "url": "https://abosaeed.com/logo.png"
-                                    }
-                                },
-                                "keywords": "${metaKeywords}",
-                                "about": [${tags.map(tag => `"${tag}"`).join(', ')}],
-                                "mentions": [${tags.map(tag => `"${tag}"`).join(', ')}]
-                            }
-                            <\/script>
-                        `;
-                    })
-                    .catch((error) => {
-                        console.error('❌ خطأ:', error);
+            db.collection('news').doc(newsId).get()
+                .then((doc) => {
+                    if (!doc.exists) {
                         document.getElementById('articleContainer').innerHTML = `
                             <div class="error">
-                                <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
-                                <h3>❌ حدث خطأ في تحميل الخبر</h3>
-                                <p style="color: #666; margin: 15px;">${error.message}</p>
+                                <i class="fas fa-newspaper" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
+                                <h3>❌ الخبر غير موجود</h3>
+                                <p>عذراً، هذا الخبر قد يكون تم حذفه أو نقله</p>
                                 <a href="index.html" class="back-link" style="margin-top: 20px;">← العودة للرئيسية</a>
                             </div>
                         `;
+                        return;
+                    }
+
+                    const news = doc.data();
+                    const date = news.createdAt ? news.createdAt.toDate() : new Date();
+                    const tags = news.tags || [];
+                    
+                    const metaDescription = news.excerpt || news.title;
+                    const metaKeywords = tags.join(', ');
+                    const currentUrl = window.location.href;
+                    
+                    document.title = `${news.title} - أبو السعد للاخبار`;
+                    
+                    const setMeta = (id, content) => {
+                        const el = document.getElementById(id);
+                        if (el) el.setAttribute('content', content);
+                    };
+                    
+                    setMeta('metaDescription', metaDescription.substring(0, 160));
+                    setMeta('metaKeywords', metaKeywords);
+                    setMeta('metaAuthor', news.author || 'أبو السعد للاخبار');
+                    setMeta('ogTitle', news.title);
+                    setMeta('ogDescription', metaDescription.substring(0, 200));
+                    setMeta('ogImage', news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد');
+                    setMeta('ogUrl', currentUrl);
+                    setMeta('twitterTitle', news.title);
+                    setMeta('twitterDescription', metaDescription.substring(0, 200));
+                    setMeta('twitterImage', news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد');
+
+                    updateCanonicalAndBreadcrumb(news.title, news.category);
+
+                    db.collection('news').doc(newsId).update({
+                        views: (news.views || 0) + 1
+                    }).catch(() => {});
+
+                    const formattedDate = date.toLocaleDateString('ar-EG', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
                     });
-            }
+
+                    const formattedTime = date.toLocaleTimeString('ar-EG', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    let hiddenTagsHTML = '';
+                    if (tags.length > 0) {
+                        hiddenTagsHTML = `
+                            <div class="seo-tags-hidden" aria-hidden="true">
+                                <span class="seo-keywords">الكلمات المفتاحية: ${tags.map(t => '#' + t).join(', ')}</span>
+                                ${tags.map(tag => `<a href="search.html?tag=${encodeURIComponent(tag)}" rel="tag" class="seo-tag">#${tag}</a>`).join('')}
+                            </div>
+                        `;
+                    }
+
+                    document.getElementById('articleContainer').innerHTML = `
+                        <article class="article-card">
+                            <div class="article-header">
+                                <div class="article-category">
+                                    <i class="fas fa-tag"></i> ${escapeHtml(news.category || 'عام')}
+                                </div>
+                                <h1 class="article-title">${escapeHtml(news.title)}</h1>
+                                <div class="article-meta">
+                                    <div class="author-badge">
+                                        <i class="fas fa-user-edit"></i>
+                                        <span>${escapeHtml(news.author || 'أبو السعد')}</span>
+                                    </div>
+                                    <span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
+                                    <span><i class="fas fa-clock"></i> ${formattedTime}</span>
+                                    <span><i class="fas fa-eye"></i> ${(news.views || 0) + 1} مشاهدة</span>
+                                </div>
+                            </div>
+
+                            <div class="article-image-container">
+                                <img src="${news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد'}" 
+                                     alt="${escapeHtml(news.title)}" 
+                                     class="article-image"
+                                     onerror="this.src='https://via.placeholder.com/800x400?text=صورة+غير+متوفرة'">
+                            </div>
+
+                            <div class="article-content">
+                                ${news.content || ''}
+                            </div>
+
+                            <div class="article-footer">
+                                <div class="share-section">
+                                    <div class="share-title">
+                                        <i class="fas fa-share-alt"></i>
+                                        <span>شارك هذا الخبر</span>
+                                    </div>
+                                    <div class="share-buttons">
+                                        <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" 
+                                           target="_blank" class="share-btn facebook">
+                                            <i class="fab fa-facebook-f"></i> <span>فيسبوك</span>
+                                        </a>
+                                        <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(news.title)}&url=${encodeURIComponent(window.location.href)}" 
+                                           target="_blank" class="share-btn twitter">
+                                            <i class="fab fa-twitter"></i> <span>تويتر</span>
+                                        </a>
+                                        <a href="https://wa.me/?text=${encodeURIComponent(news.title + ' ' + window.location.href)}" 
+                                           target="_blank" class="share-btn whatsapp">
+                                            <i class="fab fa-whatsapp"></i> <span>واتساب</span>
+                                        </a>
+                                        <a href="https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(news.title)}" 
+                                           target="_blank" class="share-btn telegram">
+                                            <i class="fab fa-telegram-plane"></i> <span>تليجرام</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <a href="index.html" class="back-link">
+                                        <i class="fas fa-arrow-right"></i> العودة للرئيسية
+                                    </a>
+                                </div>
+                            </div>
+                            ${hiddenTagsHTML}
+                        </article>
+                        
+                        <script type="application/ld+json">
+                        {
+                            "@context": "https://schema.org",
+                            "@type": "NewsArticle",
+                            "headline": "${news.title.replace(/"/g, '\\"')}",
+                            "description": "${(news.excerpt || news.title).replace(/"/g, '\\"').substring(0, 200)}",
+                            "image": "${news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد'}",
+                            "datePublished": "${date.toISOString()}",
+                            "dateModified": "${date.toISOString()}",
+                            "author": {
+                                "@type": "Person",
+                                "name": "${news.author || 'أبو السعد للاخبار'}"
+                            },
+                            "publisher": {
+                                "@type": "Organization",
+                                "name": "أبو السعد للاخبار",
+                                "logo": {
+                                    "@type": "ImageObject",
+                                    "url": "https://abu-el-saad-news.web.app/logo.png"
+                                }
+                            },
+                            "mainEntityOfPage": {
+                                "@type": "WebPage",
+                                "@id": "${currentUrl}"
+                            },
+                            "keywords": "${metaKeywords}",
+                            "about": [${tags.map(tag => `"${tag.replace(/"/g, '\\"')}"`).join(', ')}]
+                        }
+                        <\/script>
+                    `;
+                })
+                .catch((error) => {
+                    console.error('❌ خطأ:', error);
+                    document.getElementById('articleContainer').innerHTML = `
+                        <div class="error">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
+                            <h3>❌ حدث خطأ في تحميل الخبر</h3>
+                            <p style="color: #666; margin: 15px;">${escapeHtml(error.message)}</p>
+                            <a href="index.html" class="back-link" style="margin-top: 20px;">← العودة للرئيسية</a>
+                        </div>
+                    `;
+                });
         }
     </script>
 </body>
