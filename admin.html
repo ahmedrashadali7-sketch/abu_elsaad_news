@@ -527,6 +527,25 @@
             border-right: 4px solid #ffc107;
         }
 
+        .sitemap-link-box {
+            margin-top: 15px;
+            padding: 12px 15px;
+            background: #e8f4f8;
+            border-radius: 12px;
+            border-right: 4px solid var(--primary);
+            font-size: 14px;
+        }
+
+        .sitemap-link-box a {
+            color: var(--primary);
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .sitemap-link-box a:hover {
+            text-decoration: underline;
+        }
+
         .section-divider {
             margin: 30px 0 20px;
             position: relative;
@@ -952,7 +971,11 @@
             msg.className = `message ${type}`;
             msg.innerHTML = text;
             msg.style.display = 'block';
-            setTimeout(() => msg.style.display = 'none', 5000);
+            // إزالة أي محتوى إضافي بعد 10 ثواني
+            setTimeout(() => {
+                msg.style.display = 'none';
+                msg.innerHTML = '';
+            }, 10000);
         }
         
         window.publishNews = async function() {
@@ -1007,8 +1030,33 @@
                     published: true
                 });
                 
+                // رسالة النجاح
                 showMessage(`✅ تم نشر الخبر "${title}" بنجاح مع ${tagsList.length} كلمة مفتاحية!`, 'success');
                 
+                // ========== كود تحديث Sitemap التلقائي (نسخة الرابط المباشر) ==========
+                setTimeout(() => {
+                    const msgDiv = document.getElementById('message');
+                    const sitemapBox = document.createElement('div');
+                    sitemapBox.className = 'sitemap-link-box';
+                    sitemapBox.innerHTML = `
+                        <i class="fas fa-map" style="color: var(--primary); margin-left: 8px;"></i>
+                        <strong>🗺️ تحديث Sitemap:</strong><br>
+                        <a href="https://abu-el-saad-news.web.app/sitemap-generator.html" target="_blank">
+                            🔗 اضغط هنا لإنشاء Sitemap جديد
+                        </a>
+                        <br>
+                        <small style="color: #666;">⚠️ بعد التحميل، قم برفع ملف sitemap.xml إلى مجلد موقعك</small>
+                    `;
+                    msgDiv.appendChild(sitemapBox);
+                    
+                    // إزالة الرابط بعد 30 ثانية
+                    setTimeout(() => {
+                        if(sitemapBox.parentNode) sitemapBox.remove();
+                    }, 30000);
+                }, 500);
+                // ========== نهاية كود Sitemap ==========
+                
+                // تفريغ الحقول
                 document.getElementById('title').value = '';
                 document.getElementById('excerpt').value = '';
                 document.getElementById('content').value = '';
