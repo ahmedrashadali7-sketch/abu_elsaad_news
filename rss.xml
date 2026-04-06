@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>أبو السعد للاخبار - آخر الأخبار</title>
+    <link>https://abu-el-saad-news.web.app/</link>
+    <description>بوابتك الإخبارية الشاملة - أحدث الأخبار المصرية والعالمية</description>
+    <language>ar</language>
+    <lastBuildDate>Mon, 06 Apr 2026 12:00:00 GMT</lastBuildDate>
+    <atom:link href="https://abu-el-saad-news.web.app/rss.xml" rel="self" type="application/rss+xml"/>
+    <generator>أبو السعد للاخبار RSS Generator</generator>
+    
+    <!-- الأخبار ستتم إضافتها ديناميكياً من Firebase -->
+    
+  </channel>
+</rss>
