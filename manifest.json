@@ -1,0 +1,33 @@
+{
+  "name": "أبو السعد للاخبار",
+  "short_name": "أبو السعد",
+  "description": "بوابتك الإخبارية الشاملة - أحدث الأخبار المصرية والعالمية",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "theme_color": "#C49A6C",
+  "background_color": "#1e293b",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "https://abu-el-saad-news.web.app/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://abu-el-saad-news.web.app/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "أحدث الأخبار",
+      "short_name": "أخبار",
+      "description": "آخر الأخبار العاجلة",
+      "url": "/index.html"
+    }
+  ]
+}
