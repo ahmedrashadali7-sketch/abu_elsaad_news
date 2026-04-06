@@ -803,325 +803,334 @@
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
+    <!-- تحميل Firebase بشكل غير متزامن -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyBiLnQKblUsRxmz6rUWAb7RpbFUakeWX_E",
-            authDomain: "abu-el-saad-news.firebaseapp.com",
-            projectId: "abu-el-saad-news",
-            storageBucket: "abu-el-saad-news.firebasestorage.app",
-            messagingSenderId: "127394884030",
-            appId: "1:127394884030:web:52a31322a180bc717931ef",
-            measurementId: "G-KZEYXRFQ8Y"
-        };
-        
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
-        window.auth = auth;
-        window.db = db;
-        
-        let selectedSection = 'main';
-        let selectedCategory = '';
-        let currentUser = null;
-        let tagsList = [];
-        
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('userInfo').style.display = 'flex';
-                document.getElementById('userEmail').textContent = user.email;
-                showMessage(`مرحباً ${user.email}`, 'success');
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
-        
-        window.logout = async function() {
-            try {
-                await signOut(auth);
-                window.location.href = 'login.html';
-            } catch (error) {
-                console.error('خطأ في تسجيل الخروج:', error);
-                showMessage('خطأ في تسجيل الخروج', 'error');
-            }
-        };
-        
-        window.publishBreakingNews = async function() {
-            const breakingText = document.getElementById('breakingTextInput').value.trim();
-            
-            if (!breakingText) {
-                showMessage('❌ الرجاء إدخال نص الخبر العاجل', 'error');
-                return;
-            }
-            
-            const btn = document.getElementById('breakingBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإضافة...';
-            
-            try {
-                await setDoc(doc(db, 'breaking', 'current'), {
-                    text: breakingText,
-                    createdAt: serverTimestamp(),
-                    author: currentUser ? currentUser.email : 'admin'
-                });
-                
-                showMessage(`✅ تم إضافة الخبر العاجل: "${breakingText}"`, 'success');
-                document.getElementById('breakingTextInput').value = '';
-                
-            } catch (error) {
-                console.error('❌ خطأ:', error);
-                showMessage(`❌ فشل الإضافة: ${error.message}`, 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-bolt"></i> إضافة إلى الشريط العاجل';
-            }
-        };
-        
-        function updateTagsDisplay() {
-            const tagsListDiv = document.getElementById('tagsList');
-            tagsListDiv.innerHTML = '';
-            tagsList.forEach((tag, index) => {
-                const tagElement = document.createElement('div');
-                tagElement.className = 'tag';
-                tagElement.innerHTML = `
-                    ${escapeHtml(tag)}
-                    <i class="fas fa-times" onclick="removeTag(${index})"></i>
-                `;
-                tagsListDiv.appendChild(tagElement);
-            });
-        }
-        
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-        
-        window.removeTag = function(index) {
-            tagsList.splice(index, 1);
-            updateTagsDisplay();
-            showMessage('تم حذف الكلمة المفتاحية', 'success');
-        };
-        
-        window.handleTagInput = function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                const input = document.getElementById('tagInput');
-                let tag = input.value.trim();
-                
-                if (tag) {
-                    if (tag.startsWith('#')) {
-                        tag = tag.substring(1);
-                    }
-                    
-                    tag = tag.replace(/^[,،\s]+|[,،\s]+$/g, '');
-                    
-                    if (tag && !tagsList.includes(tag)) {
-                        tagsList.push(tag);
-                        updateTagsDisplay();
-                        input.value = '';
-                        showMessage(`✅ تم إضافة: "${tag}"`, 'success');
-                    } else if (tagsList.includes(tag)) {
-                        showMessage(`⚠️ الكلمة "${tag}" موجودة بالفعل`, 'warning');
-                        input.value = '';
-                    }
-                }
-            }
-        };
-        
-        window.addSuggestedTag = function(tag) {
-            if (!tagsList.includes(tag)) {
-                tagsList.push(tag);
-                updateTagsDisplay();
-                showMessage(`✅ تم إضافة: "${tag}"`, 'success');
-            } else {
-                showMessage(`⚠️ الكلمة "${tag}" موجودة بالفعل`, 'warning');
-            }
-        };
-        
-        window.previewImage = function() {
-            const imageUrl = document.getElementById('imageUrl').value.trim();
-            const previewDiv = document.getElementById('imagePreview');
-            const previewImg = document.getElementById('previewImg');
-            
-            if (imageUrl) {
-                previewImg.src = imageUrl;
-                previewDiv.style.display = 'block';
-                previewImg.onerror = function() {
-                    previewDiv.style.display = 'none';
-                    showMessage('⚠️ رابط الصورة غير صالح', 'warning');
-                };
-            } else {
-                previewDiv.style.display = 'none';
-                previewImg.src = '';
-            }
-        };
-        
-        window.selectSection = function(element, section) {
-            document.querySelectorAll('.section-card').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            element.classList.add('active');
-            selectedSection = section;
-            showMessage(`تم اختيار قسم: ${element.querySelector('span').innerText}`, 'success');
-        };
-        
-        window.selectCategory = function(element, category) {
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            element.classList.add('active');
-            selectedCategory = category;
-            showMessage(`تم اختيار تصنيف: ${category}`, 'success');
-        };
-        
-        function showMessage(text, type) {
-            const msg = document.getElementById('message');
-            msg.className = `message ${type}`;
-            msg.innerHTML = text;
-            msg.style.display = 'block';
-            // إزالة أي محتوى إضافي بعد 10 ثواني
-            setTimeout(() => {
-                msg.style.display = 'none';
-                msg.innerHTML = '';
-            }, 10000);
-        }
-        
-        window.publishNews = async function() {
-            const title = document.getElementById('title').value.trim();
-            const excerpt = document.getElementById('excerpt').value.trim();
-            const content = document.getElementById('content').value.trim();
-            let imageUrl = document.getElementById('imageUrl').value.trim();
-            let authorName = document.getElementById('authorName').value.trim();
-            
-            if (!title) {
-                showMessage('❌ الرجاء إدخال عنوان الخبر', 'error');
-                return;
-            }
-            if (!excerpt) {
-                showMessage('❌ الرجاء إدخال ملخص الخبر', 'error');
-                return;
-            }
-            if (!content) {
-                showMessage('❌ الرجاء إدخال المحتوى', 'error');
-                return;
-            }
-            if (!selectedCategory) {
-                showMessage('❌ الرجاء اختيار التصنيف', 'error');
-                return;
-            }
-            
-            if (!authorName) {
-                authorName = 'أبو السعد للاخبار';
-            }
-            
-            if (!imageUrl) {
-                imageUrl = `https://via.placeholder.com/800x400/C49A6C/FFFFFF?text=${encodeURIComponent(title.substring(0, 30))}`;
-            }
-            
-            const btn = document.getElementById('publishBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري النشر...';
-            
-            try {
-                const docRef = await addDoc(collection(db, 'news'), {
-                    title: title,
-                    excerpt: excerpt,
-                    content: content,
-                    section: selectedSection,
-                    category: selectedCategory,
-                    image: imageUrl,
-                    author: authorName,
-                    authorEmail: currentUser ? currentUser.email : 'admin@abosaeed.com',
-                    tags: tagsList,
-                    views: 0,
-                    createdAt: serverTimestamp(),
-                    published: true
-                });
-                
-                // رسالة النجاح
-                showMessage(`✅ تم نشر الخبر "${title}" بنجاح مع ${tagsList.length} كلمة مفتاحية!`, 'success');
-                
-                // ========== كود تحديث Sitemap التلقائي (نسخة الرابط المباشر) ==========
-                setTimeout(() => {
-                    const msgDiv = document.getElementById('message');
-                    const sitemapBox = document.createElement('div');
-                    sitemapBox.className = 'sitemap-link-box';
-                    sitemapBox.innerHTML = `
-                        <i class="fas fa-map" style="color: var(--primary); margin-left: 8px;"></i>
-                        <strong>🗺️ تحديث Sitemap:</strong><br>
-                        <a href="https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/sitemap-generator.html" target="_blank">
-                            🔗 اضغط هنا لإنشاء Sitemap جديد
-                        </a>
-                        <br>
-                        <small style="color: #666;">⚠️ بعد التحميل، قم برفع ملف sitemap.xml إلى مجلد موقعك</small>
-                    `;
-                    msgDiv.appendChild(sitemapBox);
-                    
-                    // إزالة الرابط بعد 30 ثانية
-                    setTimeout(() => {
-                        if(sitemapBox.parentNode) sitemapBox.remove();
-                    }, 30000);
-                }, 500);
-                // ========== نهاية كود Sitemap ==========
-                
-                // تفريغ الحقول
-                document.getElementById('title').value = '';
-                document.getElementById('excerpt').value = '';
-                document.getElementById('content').value = '';
-                document.getElementById('imageUrl').value = '';
-                document.getElementById('authorName').value = '';
-                document.getElementById('imagePreview').style.display = 'none';
-                
-                tagsList = [];
-                updateTagsDisplay();
-                document.getElementById('tagInput').value = '';
-                
-                document.querySelectorAll('.section-card').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.querySelectorAll('.category-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                
-                selectedSection = 'main';
-                selectedCategory = '';
-                
-            } catch (error) {
-                console.error('❌ خطأ أثناء نشر الخبر:', error);
-                showMessage(`❌ فشل النشر: ${error.message}`, 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-paper-plane"></i> نشر الخبر';
-            }
-        };
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            const textareas = ['title', 'excerpt', 'content', 'breakingTextInput'];
-            textareas.forEach(id => {
-                const el = document.getElementById(id);
-                if(el) {
-                    el.addEventListener('keypress', function(e) {
-                        if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                            e.preventDefault();
-                            if(id === 'breakingTextInput') {
-                                window.publishBreakingNews();
-                            } else {
-                                window.publishNews();
-                            }
-                        }
+        // تحميل Firebase بشكل غير متزامن لتحسين سرعة التحميل
+        (function() {
+            function loadFirebaseAndStart() {
+                import('https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js').then(({ initializeApp }) => {
+                    import('https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js').then(({ getAnalytics }) => {
+                        import('https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js').then(({ getAuth, onAuthStateChanged, signOut }) => {
+                            import('https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js').then(({ getFirestore, collection, addDoc, serverTimestamp, doc, setDoc }) => {
+                                const firebaseConfig = {
+                                    apiKey: "AIzaSyBiLnQKblUsRxmz6rUWAb7RpbFUakeWX_E",
+                                    authDomain: "abu-el-saad-news.firebaseapp.com",
+                                    projectId: "abu-el-saad-news",
+                                    storageBucket: "abu-el-saad-news.firebasestorage.app",
+                                    messagingSenderId: "127394884030",
+                                    appId: "1:127394884030:web:52a31322a180bc717931ef",
+                                    measurementId: "G-KZEYXRFQ8Y"
+                                };
+                                
+                                const app = initializeApp(firebaseConfig);
+                                const analytics = getAnalytics(app);
+                                const auth = getAuth(app);
+                                const db = getFirestore(app);
+                                
+                                window.auth = auth;
+                                window.db = db;
+                                
+                                let selectedSection = 'main';
+                                let selectedCategory = '';
+                                let currentUser = null;
+                                let tagsList = [];
+                                
+                                onAuthStateChanged(auth, (user) => {
+                                    if (user) {
+                                        currentUser = user;
+                                        document.getElementById('userInfo').style.display = 'flex';
+                                        document.getElementById('userEmail').textContent = user.email;
+                                        showMessage(`مرحباً ${user.email}`, 'success');
+                                    } else {
+                                        window.location.href = 'login.html';
+                                    }
+                                });
+                                
+                                window.logout = async function() {
+                                    try {
+                                        await signOut(auth);
+                                        window.location.href = 'login.html';
+                                    } catch (error) {
+                                        console.error('خطأ في تسجيل الخروج:', error);
+                                        showMessage('خطأ في تسجيل الخروج', 'error');
+                                    }
+                                };
+                                
+                                window.publishBreakingNews = async function() {
+                                    const breakingText = document.getElementById('breakingTextInput').value.trim();
+                                    
+                                    if (!breakingText) {
+                                        showMessage('❌ الرجاء إدخال نص الخبر العاجل', 'error');
+                                        return;
+                                    }
+                                    
+                                    const btn = document.getElementById('breakingBtn');
+                                    btn.disabled = true;
+                                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإضافة...';
+                                    
+                                    try {
+                                        await setDoc(doc(db, 'breaking', 'current'), {
+                                            text: breakingText,
+                                            createdAt: serverTimestamp(),
+                                            author: currentUser ? currentUser.email : 'admin'
+                                        });
+                                        
+                                        showMessage(`✅ تم إضافة الخبر العاجل: "${breakingText}"`, 'success');
+                                        document.getElementById('breakingTextInput').value = '';
+                                        
+                                    } catch (error) {
+                                        console.error('❌ خطأ:', error);
+                                        showMessage(`❌ فشل الإضافة: ${error.message}`, 'error');
+                                    } finally {
+                                        btn.disabled = false;
+                                        btn.innerHTML = '<i class="fas fa-bolt"></i> إضافة إلى الشريط العاجل';
+                                    }
+                                };
+                                
+                                function updateTagsDisplay() {
+                                    const tagsListDiv = document.getElementById('tagsList');
+                                    tagsListDiv.innerHTML = '';
+                                    tagsList.forEach((tag, index) => {
+                                        const tagElement = document.createElement('div');
+                                        tagElement.className = 'tag';
+                                        tagElement.innerHTML = `
+                                            ${escapeHtml(tag)}
+                                            <i class="fas fa-times" onclick="removeTag(${index})"></i>
+                                        `;
+                                        tagsListDiv.appendChild(tagElement);
+                                    });
+                                }
+                                
+                                function escapeHtml(text) {
+                                    const div = document.createElement('div');
+                                    div.textContent = text;
+                                    return div.innerHTML;
+                                }
+                                
+                                window.removeTag = function(index) {
+                                    tagsList.splice(index, 1);
+                                    updateTagsDisplay();
+                                    showMessage('تم حذف الكلمة المفتاحية', 'success');
+                                };
+                                
+                                window.handleTagInput = function(event) {
+                                    if (event.key === 'Enter') {
+                                        event.preventDefault();
+                                        const input = document.getElementById('tagInput');
+                                        let tag = input.value.trim();
+                                        
+                                        if (tag) {
+                                            if (tag.startsWith('#')) {
+                                                tag = tag.substring(1);
+                                            }
+                                            
+                                            tag = tag.replace(/^[,،\s]+|[,،\s]+$/g, '');
+                                            
+                                            if (tag && !tagsList.includes(tag)) {
+                                                tagsList.push(tag);
+                                                updateTagsDisplay();
+                                                input.value = '';
+                                                showMessage(`✅ تم إضافة: "${tag}"`, 'success');
+                                            } else if (tagsList.includes(tag)) {
+                                                showMessage(`⚠️ الكلمة "${tag}" موجودة بالفعل`, 'warning');
+                                                input.value = '';
+                                            }
+                                        }
+                                    }
+                                };
+                                
+                                window.addSuggestedTag = function(tag) {
+                                    if (!tagsList.includes(tag)) {
+                                        tagsList.push(tag);
+                                        updateTagsDisplay();
+                                        showMessage(`✅ تم إضافة: "${tag}"`, 'success');
+                                    } else {
+                                        showMessage(`⚠️ الكلمة "${tag}" موجودة بالفعل`, 'warning');
+                                    }
+                                };
+                                
+                                window.previewImage = function() {
+                                    const imageUrl = document.getElementById('imageUrl').value.trim();
+                                    const previewDiv = document.getElementById('imagePreview');
+                                    const previewImg = document.getElementById('previewImg');
+                                    
+                                    if (imageUrl) {
+                                        previewImg.src = imageUrl;
+                                        previewDiv.style.display = 'block';
+                                        previewImg.onerror = function() {
+                                            previewDiv.style.display = 'none';
+                                            showMessage('⚠️ رابط الصورة غير صالح', 'warning');
+                                        };
+                                    } else {
+                                        previewDiv.style.display = 'none';
+                                        previewImg.src = '';
+                                    }
+                                };
+                                
+                                window.selectSection = function(element, section) {
+                                    document.querySelectorAll('.section-card').forEach(btn => {
+                                        btn.classList.remove('active');
+                                    });
+                                    element.classList.add('active');
+                                    selectedSection = section;
+                                    showMessage(`تم اختيار قسم: ${element.querySelector('span').innerText}`, 'success');
+                                };
+                                
+                                window.selectCategory = function(element, category) {
+                                    document.querySelectorAll('.category-btn').forEach(btn => {
+                                        btn.classList.remove('active');
+                                    });
+                                    element.classList.add('active');
+                                    selectedCategory = category;
+                                    showMessage(`تم اختيار تصنيف: ${category}`, 'success');
+                                };
+                                
+                                function showMessage(text, type) {
+                                    const msg = document.getElementById('message');
+                                    msg.className = `message ${type}`;
+                                    msg.innerHTML = text;
+                                    msg.style.display = 'block';
+                                    setTimeout(() => {
+                                        msg.style.display = 'none';
+                                        msg.innerHTML = '';
+                                    }, 10000);
+                                }
+                                
+                                window.publishNews = async function() {
+                                    const title = document.getElementById('title').value.trim();
+                                    const excerpt = document.getElementById('excerpt').value.trim();
+                                    const content = document.getElementById('content').value.trim();
+                                    let imageUrl = document.getElementById('imageUrl').value.trim();
+                                    let authorName = document.getElementById('authorName').value.trim();
+                                    
+                                    if (!title) {
+                                        showMessage('❌ الرجاء إدخال عنوان الخبر', 'error');
+                                        return;
+                                    }
+                                    if (!excerpt) {
+                                        showMessage('❌ الرجاء إدخال ملخص الخبر', 'error');
+                                        return;
+                                    }
+                                    if (!content) {
+                                        showMessage('❌ الرجاء إدخال المحتوى', 'error');
+                                        return;
+                                    }
+                                    if (!selectedCategory) {
+                                        showMessage('❌ الرجاء اختيار التصنيف', 'error');
+                                        return;
+                                    }
+                                    
+                                    if (!authorName) {
+                                        authorName = 'أبو السعد للاخبار';
+                                    }
+                                    
+                                    if (!imageUrl) {
+                                        imageUrl = `https://via.placeholder.com/800x400/C49A6C/FFFFFF?text=${encodeURIComponent(title.substring(0, 30))}`;
+                                    }
+                                    
+                                    const btn = document.getElementById('publishBtn');
+                                    btn.disabled = true;
+                                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري النشر...';
+                                    
+                                    try {
+                                        const docRef = await addDoc(collection(db, 'news'), {
+                                            title: title,
+                                            excerpt: excerpt,
+                                            content: content,
+                                            section: selectedSection,
+                                            category: selectedCategory,
+                                            image: imageUrl,
+                                            author: authorName,
+                                            authorEmail: currentUser ? currentUser.email : 'admin@abosaeed.com',
+                                            tags: tagsList,
+                                            views: 0,
+                                            createdAt: serverTimestamp(),
+                                            published: true
+                                        });
+                                        
+                                        showMessage(`✅ تم نشر الخبر "${title}" بنجاح مع ${tagsList.length} كلمة مفتاحية!`, 'success');
+                                        
+                                        setTimeout(() => {
+                                            const msgDiv = document.getElementById('message');
+                                            const sitemapBox = document.createElement('div');
+                                            sitemapBox.className = 'sitemap-link-box';
+                                            sitemapBox.innerHTML = `
+                                                <i class="fas fa-map" style="color: var(--primary); margin-left: 8px;"></i>
+                                                <strong>🗺️ تحديث Sitemap:</strong><br>
+                                                <a href="https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/sitemap-generator.html" target="_blank">
+                                                    🔗 اضغط هنا لإنشاء Sitemap جديد
+                                                </a>
+                                                <br>
+                                                <small style="color: #666;">⚠️ بعد التحميل، قم برفع ملف sitemap.xml إلى مجلد موقعك</small>
+                                            `;
+                                            msgDiv.appendChild(sitemapBox);
+                                            
+                                            setTimeout(() => {
+                                                if(sitemapBox.parentNode) sitemapBox.remove();
+                                            }, 30000);
+                                        }, 500);
+                                        
+                                        document.getElementById('title').value = '';
+                                        document.getElementById('excerpt').value = '';
+                                        document.getElementById('content').value = '';
+                                        document.getElementById('imageUrl').value = '';
+                                        document.getElementById('authorName').value = '';
+                                        document.getElementById('imagePreview').style.display = 'none';
+                                        
+                                        tagsList = [];
+                                        updateTagsDisplay();
+                                        document.getElementById('tagInput').value = '';
+                                        
+                                        document.querySelectorAll('.section-card').forEach(btn => {
+                                            btn.classList.remove('active');
+                                        });
+                                        document.querySelectorAll('.category-btn').forEach(btn => {
+                                            btn.classList.remove('active');
+                                        });
+                                        
+                                        selectedSection = 'main';
+                                        selectedCategory = '';
+                                        
+                                    } catch (error) {
+                                        console.error('❌ خطأ أثناء نشر الخبر:', error);
+                                        showMessage(`❌ فشل النشر: ${error.message}`, 'error');
+                                    } finally {
+                                        btn.disabled = false;
+                                        btn.innerHTML = '<i class="fas fa-paper-plane"></i> نشر الخبر';
+                                    }
+                                };
+                                
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const textareas = ['title', 'excerpt', 'content', 'breakingTextInput'];
+                                    textareas.forEach(id => {
+                                        const el = document.getElementById(id);
+                                        if(el) {
+                                            el.addEventListener('keypress', function(e) {
+                                                if(e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                                                    e.preventDefault();
+                                                    if(id === 'breakingTextInput') {
+                                                        window.publishBreakingNews();
+                                                    } else {
+                                                        window.publishNews();
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    });
+                                });
+                            });
+                        });
                     });
-                }
-            });
-        });
+                });
+            }
+            
+            // تأخير تحميل Firebase لتحسين سرعة التحميل
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', loadFirebaseAndStart);
+            } else {
+                setTimeout(loadFirebaseAndStart, 100);
+            }
+        })();
     </script>
 </body>
 </html>
