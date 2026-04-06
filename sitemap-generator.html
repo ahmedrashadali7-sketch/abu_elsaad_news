@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sitemap Generator - أبو السعد للاخبار</title>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            direction: ltr;
+            text-align: left;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 { color: #C49A6C; }
+        pre {
+            background: #f0f0f0;
+            padding: 15px;
+            overflow-x: auto;
+            border-radius: 10px;
+            font-size: 12px;
+            direction: ltr;
+            text-align: left;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .btn {
+            background: #C49A6C;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        .btn:hover { background: #a57d54; }
+        .stats {
+            background: #e8f4f8;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗺️ مولد خريطة الموقع (Sitemap Generator)</h1>
+        <p>هذه الصفحة تقوم بإنشاء ملف <strong>sitemap.xml</strong> تلقائياً من أخبارك في Firebase</p>
+        
+        <button class="btn" onclick="generateAndDownload()">📥 تحميل sitemap.xml</button>
+        <button class="btn" onclick="copyToClipboard()">📋 نسخ إلى الحافظة</button>
+        
+        <div id="status"></div>
+        <div id="stats" class="stats" style="display: none;"></div>
+        <div id="output"></div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBiLnQKblUsRxmz6rUWAb7RpbFUakeWX_E",
+            authDomain: "abu-el-saad-news.firebaseapp.com",
+            projectId: "abu-el-saad-news",
+            storageBucket: "abu-el-saad-news.firebasestorage.app",
+            messagingSenderId: "127394884030",
+            appId: "1:127394884030:web:52a31322a180bc717931ef"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let currentXml = '';
+
+        function escapeXml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        async function generateSitemap() {
+            const statusDiv = document.getElementById('status');
+            const statsDiv = document.getElementById('stats');
+            const outputDiv = document.getElementById('output');
+            
+            statusDiv.innerHTML = '<p>🔄 جاري تحميل الأخبار من Firebase...</p>';
+            outputDiv.innerHTML = '';
+            statsDiv.style.display = 'none';
+            
+            try {
+                // جلب جميع الأخبار
+                const snapshot = await db.collection('news').orderBy('createdAt', 'desc').get();
+                
+                let urls = [];
+                const today = new Date().toISOString().split('T')[0];
+                
+                // 1. الصفحة الرئيسية
+                urls.push({
+                    url: 'https://abu-el-saad-news.web.app/index.html',
+                    lastmod: today,
+                    changefreq: 'hourly',
+                    priority: '1.0'
+                });
+                
+                // 2. صفحات المقالات
+                snapshot.forEach(doc => {
+                    const news = doc.data();
+                    const date = news.createdAt ? news.createdAt.toDate() : new Date();
+                    urls.push({
+                        url: `https://abu-el-saad-news.web.app/article.html?id=${doc.id}`,
+                        lastmod: date.toISOString().split('T')[0],
+                        changefreq: 'daily',
+                        priority: '0.8',
+                        title: news.title,
+                        category: news.category,
+                        image: news.image
+                    });
+                });
+                
+                // بناء XML
+                let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+                xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n';
+                xml += '        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"\n';
+                xml += '        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n\n';
+                
+                urls.forEach(item => {
+                    xml += '  <url>\n';
+                    xml += `    <loc>${item.url}</loc>\n`;
+                    xml += `    <lastmod>${item.lastmod}</lastmod>\n`;
+                    xml += `    <changefreq>${item.changefreq}</changefreq>\n`;
+                    xml += `    <priority>${item.priority}</priority>\n`;
+                    
+                    // إضافة معلومات الصورة
+                    if (item.image) {
+                        xml += '    <image:image>\n';
+                        xml += `      <image:loc>${escapeXml(item.image)}</image:loc>\n`;
+                        xml += `      <image:title>${escapeXml(item.title || 'صورة الخبر')}</image:title>\n`;
+                        xml += '    </image:image>\n';
+                    }
+                    
+                    // إضافة معلومات الخبر لـ Google News
+                    if (item.title && item.category) {
+                        xml += '    <news:news>\n';
+                        xml += '      <news:publication>\n';
+                        xml += '        <news:name>أبو السعد للاخبار</news:name>\n';
+                        xml += '        <news:language>ar</news:language>\n';
+                        xml += '      </news:publication>\n';
+                        xml += `      <news:title>${escapeXml(item.title)}</news:title>\n`;
+                        xml += `      <news:publication_date>${item.lastmod}</news:publication_date>\n`;
+                        xml += `      <news:keywords>${escapeXml(item.category)}</news:keywords>\n`;
+                        xml += '    </news:news>\n';
+                    }
+                    
+                    xml += '  </url>\n\n';
+                });
+                
+                xml += '</urlset>';
+                currentXml = xml;
+                
+                // عرض الإحصائيات
+                statsDiv.style.display = 'block';
+                statsDiv.innerHTML = `
+                    <strong>📊 الإحصائيات:</strong><br>
+                    ✅ تم إنشاء خريطة الموقع بنجاح<br>
+                    📄 عدد URLs الإجمالي: ${urls.length}<br>
+                    🗞️ عدد الأخبار: ${snapshot.size}<br>
+                    🏠 الصفحة الرئيسية: 1<br>
+                    📅 آخر تحديث: ${new Date().toLocaleString('ar-EG')}
+                `;
+                
+                // عرض الـ XML (مختصر)
+                outputDiv.innerHTML = `
+                    <h3>📄 محتوى sitemap.xml (أول 2000 حرف):</h3>
+                    <pre>${escapeXml(xml.substring(0, 2000))}${xml.length > 2000 ? '\n\n... (مختصر)' : ''}</pre>
+                `;
+                
+                statusDiv.innerHTML = '<p class="success">✅ تم إنشاء خريطة الموقع بنجاح!</p>';
+                
+                console.log('✅ Sitemap generated:', urls.length, 'URLs');
+                
+            } catch (error) {
+                console.error('❌ Error:', error);
+                statusDiv.innerHTML = `<p class="error">❌ خطأ: ${error.message}</p>`;
+            }
+        }
+        
+        function downloadSitemap() {
+            if (!currentXml) {
+                alert('الرجاء إنشاء خريطة الموقع أولاً');
+                return;
+            }
+            
+            const blob = new Blob([currentXml], { type: 'application/xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'sitemap.xml';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('✅ تم تحميل ملف sitemap.xml بنجاح!\nقم برفعه إلى مجلد موقعك');
+        }
+        
+        async function copyToClipboard() {
+            if (!currentXml) {
+                alert('الرجاء إنشاء خريطة الموقع أولاً');
+                return;
+            }
+            
+            try {
+                await navigator.clipboard.writeText(currentXml);
+                alert('✅ تم نسخ المحتوى إلى الحافظة!\nيمكنك الآن لصقه في ملف sitemap.xml');
+            } catch (err) {
+                alert('❌ فشل النسخ: ' + err.message);
+            }
+        }
+        
+        window.generateAndDownload = async function() {
+            await generateSitemap();
+            downloadSitemap();
+        };
+        
+        window.copyToClipboard = copyToClipboard;
+        
+        // تشغيل التوليد تلقائياً عند تحميل الصفحة
+        generateSitemap();
+    </script>
+</body>
+</html>
