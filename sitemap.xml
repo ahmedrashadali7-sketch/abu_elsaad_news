@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <url>
+    <loc>https://abu-el-saad-news.web.app/index.html</loc>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://abu-el-saad-news.web.app/article.html?id=Fj6cH3AXVzY3MPavCDmi</loc>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://i.postimg.cc/vZbzLLv9/1775469518737altwqyt-alsyfy-2026-fy-msr-qrar-rsmy.png</image:loc>
+      <image:title>التوقيت الصيفي 2026 في مصر.. قرار رسمي يغير الساعة خلال أيام والموعد يكشف لأول مرة</image:title>
+    </image:image>
+    <news:news>
+      <news:publication>
+        <news:name>أبو السعد للاخبار</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:title>التوقيت الصيفي 2026 في مصر.. قرار رسمي يغير الساعة خلال أيام والموعد يكشف لأول مرة</news:title>
+      <news:publication_date>2026-04-06</news:publication_date>
+      <news:keywords>صحة</news:keywords>
+    </news:news>
+  </url>
+
+  <url>
+    <loc>https://abu-el-saad-news.web.app/article.html?id=62vmJvQvCR0u2LkNcOGI</loc>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://i.postimg.cc/fTdkDhZH/myta-tʿln-ayqaf-Messenger-com-rsmy-a-fy-16-abryl.png</image:loc>
+      <image:title>رسميًا: إيقاف Messenger.com في 16 أبريل 2026 – ماذا سيحدث لمستخدمي ماسنجر؟</image:title>
+    </image:image>
+    <news:news>
+      <news:publication>
+        <news:name>أبو السعد للاخبار</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:title>رسميًا: إيقاف Messenger.com في 16 أبريل 2026 – ماذا سيحدث لمستخدمي ماسنجر؟</news:title>
+      <news:publication_date>2026-04-06</news:publication_date>
+      <news:keywords>تكنولوجيا</news:keywords>
+    </news:news>
+  </url>
+
+  <url>
+    <loc>https://abu-el-saad-news.web.app/article.html?id=5fPotwgVNc2WfqmHF16d</loc>
+    <lastmod>2026-04-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://i.postimg.cc/GtRRxKQV/1775191449421.png</image:loc>
+      <image:title>الجنيه المصري والدولار: أبعاد التحول نحو مرونة الصرف واستشراف المستقبل</image:title>
+    </image:image>
+    <news:news>
+      <news:publication>
+        <news:name>أبو السعد للاخبار</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:title>الجنيه المصري والدولار: أبعاد التحول نحو مرونة الصرف واستشراف المستقبل</news:title>
+      <news:publication_date>2026-04-03</news:publication_date>
+      <news:keywords>اقتصاد</news:keywords>
+    </news:news>
+  </url>
+
+  <url>
+    <loc>https://abu-el-saad-news.web.app/article.html?id=D1qARTRXQCkQESdrFXfc</loc>
+    <lastmod>2026-04-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://i.postimg.cc/L6MbjW9f/tsʿyd-alshrq-alawst.png</image:loc>
+      <image:title>تصعيد خطير بين إيران وإسرائيل: ضربات صاروخية متبادلة ومخاوف من حرب إقليمية شاملة</image:title>
+    </image:image>
+    <news:news>
+      <news:publication>
+        <news:name>أبو السعد للاخبار</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:title>تصعيد خطير بين إيران وإسرائيل: ضربات صاروخية متبادلة ومخاوف من حرب إقليمية شاملة</news:title>
+      <news:publication_date>2026-04-02</news:publication_date>
+      <news:keywords>سياسة</news:keywords>
+    </news:news>
+  </url>
+
+  <url>
+    <loc>https://abu-el-saad-news.web.app/article.html?id=0quBlkrgND5QPUsfvaDV</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://i.postimg.cc/ydzDmGjP/tsʿyd-ayrany.png</image:loc>
+      <image:title>تطورات حاسمة في الصراع الأمريكي الإيراني تهدد أسواق الطاقة العالمية وتثير مخاوف اقتصادية واسعة</image:title>
+    </image:image>
+    <news:news>
+      <news:publication>
+        <news:name>أبو السعد للاخبار</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:title>تطورات حاسمة في الصراع الأمريكي الإيراني تهدد أسواق الطاقة العالمية وتثير مخاوف اقتصادية واسعة</news:title>
+      <news:publication_date>2026-04-01</news:publication_date>
+      <news:keywords>سياسة</news:keywords>
+    </news:news>
+  </url>
+
+  <url>
+    <loc>https://abu-el-saad-news.web.app/article.html?id=PeITG0hmrp11I33pHmfU</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://i.postimg.cc/xC8kCQpB/htafat-mn-jmhwr-asbanya.png</image:loc>
+      <image:title>أزمة في مباراة مصر وإسبانيا.. الاتحاد المصري يدين هتافات مسيئة ويؤكد : لن تمر دون محاسبة</image:title>
+    </image:image>
+    <news:news>
+      <news:publication>
+        <news:name>أبو السعد للاخبار</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:title>أزمة في مباراة مصر وإسبانيا.. الاتحاد المصري يدين هتافات مسيئة ويؤكد : لن تمر دون محاسبة</news:title>
+      <news:publication_date>2026-04-01</news:publication_date>
+      <news:keywords>رياضة</news:keywords>
+    </news:news>
+  </url>
+
+  <url>
+    <loc>https://abu-el-saad-news.web.app/article.html?id=8Cl0jNGRurTcLDRLYAFr</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://assets-news.asharq.com/images/articles/416x416/1-1/KAROXhKO75_1774964776.webp</image:loc>
+      <image:title>إعدام الأسري الفلسطينين لدي إسرائيل</image:title>
+    </image:image>
+    <news:news>
+      <news:publication>
+        <news:name>أبو السعد للاخبار</news:name>
+        <news:language>ar</news:language>
+      </news:publication>
+      <news:title>إعدام الأسري الفلسطينين لدي إسرائيل</news:title>
+      <news:publication_date>2026-04-01</news:publication_date>
+      <news:keywords>سياسة</news:keywords>
+    </news:news>
+  </url>
+
+</urlset>
