@@ -1,153 +1,274 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Generate Sitemap - أبو السعد للاخبار</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #C49A6C;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+        button:hover { background: #a57d54; }
+        .btn-copy {
+            background: #27ae60;
+        }
+        .btn-copy:hover {
+            background: #219a52;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            overflow-x: auto;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .stats { background: #e8f4f8; padding: 10px; border-radius: 8px; margin: 15px 0; }
+        .success { color: green; }
+        .error { color: red; }
+        .copy-success {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗺️ مولد Sitemap التلقائي (توقيت عالمي UTC)</h1>
+        <button onclick="generateSitemap()">🔄 إنشاء Sitemap</button>
+        <button onclick="downloadSitemap()">📥 تحميل sitemap.xml</button>
+        <button onclick="copyToClipboard()" class="btn-copy" id="copyBtn">📋 نسخ إلى الحافظة</button>
+        <div id="status"></div>
+        <div id="stats"></div>
+        <div id="output"></div>
+    </div>
 
-  <url>
-    <loc>https://abu-el-saad-news.web.app/index.html</loc>
-    <lastmod>2026-04-06</lastmod>
-    <changefreq>hourly</changefreq>
-    <priority>1.0</priority>
-  </url>
+    <div id="copySuccess" class="copy-success">
+        ✅ تم نسخ Sitemap إلى الحافظة!
+    </div>
 
-  <url>
-    <loc>https://abu-el-saad-news.web.app/article.html?id=Fj6cH3AXVzY3MPavCDmi</loc>
-    <lastmod>2026-04-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://i.postimg.cc/vZbzLLv9/1775469518737altwqyt-alsyfy-2026-fy-msr-qrar-rsmy.png</image:loc>
-      <image:title>التوقيت الصيفي 2026 في مصر.. قرار رسمي يغير الساعة خلال أيام والموعد يكشف لأول مرة</image:title>
-    </image:image>
-    <news:news>
-      <news:publication>
-        <news:name>أبو السعد للاخبار</news:name>
-        <news:language>ar</news:language>
-      </news:publication>
-      <news:title>التوقيت الصيفي 2026 في مصر.. قرار رسمي يغير الساعة خلال أيام والموعد يكشف لأول مرة</news:title>
-      <news:publication_date>2026-04-06</news:publication_date>
-      <news:keywords>صحة</news:keywords>
-    </news:news>
-  </url>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 
-  <url>
-    <loc>https://abu-el-saad-news.web.app/article.html?id=62vmJvQvCR0u2LkNcOGI</loc>
-    <lastmod>2026-04-06</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://i.postimg.cc/fTdkDhZH/myta-tʿln-ayqaf-Messenger-com-rsmy-a-fy-16-abryl.png</image:loc>
-      <image:title>رسميًا: إيقاف Messenger.com في 16 أبريل 2026 – ماذا سيحدث لمستخدمي ماسنجر؟</image:title>
-    </image:image>
-    <news:news>
-      <news:publication>
-        <news:name>أبو السعد للاخبار</news:name>
-        <news:language>ar</news:language>
-      </news:publication>
-      <news:title>رسميًا: إيقاف Messenger.com في 16 أبريل 2026 – ماذا سيحدث لمستخدمي ماسنجر؟</news:title>
-      <news:publication_date>2026-04-06</news:publication_date>
-      <news:keywords>تكنولوجيا</news:keywords>
-    </news:news>
-  </url>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBiLnQKblUsRxmz6rUWAb7RpbFUakeWX_E",
+            authDomain: "abu-el-saad-news.firebaseapp.com",
+            projectId: "abu-el-saad-news",
+            storageBucket: "abu-el-saad-news.firebasestorage.app",
+            messagingSenderId: "127394884030",
+            appId: "1:127394884030:web:52a31322a180bc717931ef"
+        };
 
-  <url>
-    <loc>https://abu-el-saad-news.web.app/article.html?id=5fPotwgVNc2WfqmHF16d</loc>
-    <lastmod>2026-04-03</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://i.postimg.cc/GtRRxKQV/1775191449421.png</image:loc>
-      <image:title>الجنيه المصري والدولار: أبعاد التحول نحو مرونة الصرف واستشراف المستقبل</image:title>
-    </image:image>
-    <news:news>
-      <news:publication>
-        <news:name>أبو السعد للاخبار</news:name>
-        <news:language>ar</news:language>
-      </news:publication>
-      <news:title>الجنيه المصري والدولار: أبعاد التحول نحو مرونة الصرف واستشراف المستقبل</news:title>
-      <news:publication_date>2026-04-03</news:publication_date>
-      <news:keywords>اقتصاد</news:keywords>
-    </news:news>
-  </url>
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        
+        let currentXml = '';
 
-  <url>
-    <loc>https://abu-el-saad-news.web.app/article.html?id=D1qARTRXQCkQESdrFXfc</loc>
-    <lastmod>2026-04-02</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://i.postimg.cc/L6MbjW9f/tsʿyd-alshrq-alawst.png</image:loc>
-      <image:title>تصعيد خطير بين إيران وإسرائيل: ضربات صاروخية متبادلة ومخاوف من حرب إقليمية شاملة</image:title>
-    </image:image>
-    <news:news>
-      <news:publication>
-        <news:name>أبو السعد للاخبار</news:name>
-        <news:language>ar</news:language>
-      </news:publication>
-      <news:title>تصعيد خطير بين إيران وإسرائيل: ضربات صاروخية متبادلة ومخاوف من حرب إقليمية شاملة</news:title>
-      <news:publication_date>2026-04-02</news:publication_date>
-      <news:keywords>سياسة</news:keywords>
-    </news:news>
-  </url>
+        // دالة لتنسيق التاريخ والوقت بصيغة UTC (توقيت عالمي)
+        function formatDateTimeUTC(date) {
+            const year = date.getUTCFullYear();
+            const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(date.getUTCDate()).padStart(2, '0');
+            const hours = String(date.getUTCHours()).padStart(2, '0');
+            const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+            const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+            
+            // صيغة UTC (تنتهي بالحرف Z)
+            return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
+        }
 
-  <url>
-    <loc>https://abu-el-saad-news.web.app/article.html?id=0quBlkrgND5QPUsfvaDV</loc>
-    <lastmod>2026-04-01</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://i.postimg.cc/ydzDmGjP/tsʿyd-ayrany.png</image:loc>
-      <image:title>تطورات حاسمة في الصراع الأمريكي الإيراني تهدد أسواق الطاقة العالمية وتثير مخاوف اقتصادية واسعة</image:title>
-    </image:image>
-    <news:news>
-      <news:publication>
-        <news:name>أبو السعد للاخبار</news:name>
-        <news:language>ar</news:language>
-      </news:publication>
-      <news:title>تطورات حاسمة في الصراع الأمريكي الإيراني تهدد أسواق الطاقة العالمية وتثير مخاوف اقتصادية واسعة</news:title>
-      <news:publication_date>2026-04-01</news:publication_date>
-      <news:keywords>سياسة</news:keywords>
-    </news:news>
-  </url>
+        function escapeXml(text) {
+            if (!text) return '';
+            return text.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
 
-  <url>
-    <loc>https://abu-el-saad-news.web.app/article.html?id=PeITG0hmrp11I33pHmfU</loc>
-    <lastmod>2026-04-01</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://i.postimg.cc/xC8kCQpB/htafat-mn-jmhwr-asbanya.png</image:loc>
-      <image:title>أزمة في مباراة مصر وإسبانيا.. الاتحاد المصري يدين هتافات مسيئة ويؤكد : لن تمر دون محاسبة</image:title>
-    </image:image>
-    <news:news>
-      <news:publication>
-        <news:name>أبو السعد للاخبار</news:name>
-        <news:language>ar</news:language>
-      </news:publication>
-      <news:title>أزمة في مباراة مصر وإسبانيا.. الاتحاد المصري يدين هتافات مسيئة ويؤكد : لن تمر دون محاسبة</news:title>
-      <news:publication_date>2026-04-01</news:publication_date>
-      <news:keywords>رياضة</news:keywords>
-    </news:news>
-  </url>
+        async function generateSitemap() {
+            const statusDiv = document.getElementById('status');
+            const statsDiv = document.getElementById('stats');
+            const outputDiv = document.getElementById('output');
+            
+            statusDiv.innerHTML = '<p>🔄 جاري تحميل الأخبار...</p>';
+            outputDiv.innerHTML = '';
+            
+            try {
+                const snapshot = await db.collection('news').orderBy('createdAt', 'desc').get();
+                const now = new Date();
+                const currentDateTimeUTC = formatDateTimeUTC(now);
+                
+                let urls = [];
+                
+                // الصفحة الرئيسية
+                urls.push({
+                    url: 'https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/index.html',
+                    lastmod: currentDateTimeUTC,
+                    changefreq: 'hourly',
+                    priority: '1.0'
+                });
+                
+                // الأخبار
+                snapshot.forEach(doc => {
+                    const news = doc.data();
+                    const newsDate = news.createdAt ? news.createdAt.toDate() : new Date();
+                    const formattedDateTimeUTC = formatDateTimeUTC(newsDate);
+                    
+                    urls.push({
+                        url: `https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/article.html?id=${doc.id}`,
+                        lastmod: formattedDateTimeUTC,
+                        changefreq: 'daily',
+                        priority: '0.8',
+                        title: news.title,
+                        category: news.category,
+                        image: news.image
+                    });
+                });
+                
+                // بناء XML
+                let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+                xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n\n';
+                
+                urls.forEach(item => {
+                    xml += '  <url>\n';
+                    xml += `    <loc>${item.url}</loc>\n`;
+                    xml += `    <lastmod>${item.lastmod}</lastmod>\n`;
+                    xml += `    <changefreq>${item.changefreq}</changefreq>\n`;
+                    xml += `    <priority>${item.priority}</priority>\n`;
+                    
+                    if (item.image) {
+                        xml += '    <image:image>\n';
+                        xml += `      <image:loc>${escapeXml(item.image)}</image:loc>\n`;
+                        if (item.title) {
+                            xml += `      <image:title>${escapeXml(item.title)}</image:title>\n`;
+                        }
+                        xml += '    </image:image>\n';
+                    }
+                    
+                    if (item.title && item.category && item.url !== 'https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/index.html') {
+                        const lastmodDate = item.lastmod.split('T')[0];
+                        xml += '    <news:news>\n';
+                        xml += '      <news:publication>\n';
+                        xml += '        <news:name>أبو السعد للاخبار</news:name>\n';
+                        xml += '        <news:language>ar</news:language>\n';
+                        xml += '      </news:publication>\n';
+                        xml += `      <news:title>${escapeXml(item.title)}</news:title>\n`;
+                        xml += `      <news:publication_date>${lastmodDate}</news:publication_date>\n`;
+                        xml += `      <news:keywords>${escapeXml(item.category)}</news:keywords>\n`;
+                        xml += '    </news:news>\n';
+                    }
+                    
+                    xml += '  </url>\n\n';
+                });
+                
+                xml += '</urlset>';
+                currentXml = xml;
+                
+                statsDiv.innerHTML = `
+                    <div class="stats">
+                        ✅ تم الإنشاء بنجاح!<br>
+                        📄 عدد URLs: ${urls.length}<br>
+                        🗞️ عدد الأخبار: ${snapshot.size}<br>
+                        ⏰ آخر تحديث: ${currentDateTimeUTC}<br>
+                        🕐 التوقيت: UTC (توقيت عالمي)
+                    </div>
+                `;
+                
+                outputDiv.innerHTML = `<pre>${escapeXml(xml.substring(0, 2000))}${xml.length > 2000 ? '\n\n... (مختصر)' : ''}</pre>`;
+                statusDiv.innerHTML = '<p class="success">✅ تم إنشاء Sitemap بنجاح (توقيت عالمي UTC)!</p>';
+                
+                console.log('✅ Sitemap generated with UTC time:', urls.length, 'URLs');
+                
+            } catch (error) {
+                statusDiv.innerHTML = `<p class="error">❌ خطأ: ${error.message}</p>`;
+                console.error('Error:', error);
+            }
+        }
+        
+        function downloadSitemap() {
+            if (!currentXml) {
+                alert('الرجاء إنشاء Sitemap أولاً');
+                return;
+            }
+            const blob = new Blob([currentXml], { type: 'application/xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'sitemap.xml';
+            a.click();
+            URL.revokeObjectURL(url);
+            showCopyMessage('✅ تم تحميل sitemap.xml (توقيت عالمي)');
+        }
 
-  <url>
-    <loc>https://abu-el-saad-news.web.app/article.html?id=8Cl0jNGRurTcLDRLYAFr</loc>
-    <lastmod>2026-04-01</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-    <image:image>
-      <image:loc>https://assets-news.asharq.com/images/articles/416x416/1-1/KAROXhKO75_1774964776.webp</image:loc>
-      <image:title>إعدام الأسري الفلسطينين لدي إسرائيل</image:title>
-    </image:image>
-    <news:news>
-      <news:publication>
-        <news:name>أبو السعد للاخبار</news:name>
-        <news:language>ar</news:language>
-      </news:publication>
-      <news:title>إعدام الأسري الفلسطينين لدي إسرائيل</news:title>
-      <news:publication_date>2026-04-01</news:publication_date>
-      <news:keywords>سياسة</news:keywords>
-    </news:news>
-  </url>
+        async function copyToClipboard() {
+            if (!currentXml) {
+                alert('⚠️ الرجاء إنشاء Sitemap أولاً');
+                return;
+            }
+            
+            try {
+                await navigator.clipboard.writeText(currentXml);
+                showCopyMessage('✅ تم نسخ Sitemap إلى الحافظة بنجاح! (توقيت عالمي)');
+            } catch (err) {
+                const textarea = document.createElement('textarea');
+                textarea.value = currentXml;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showCopyMessage('✅ تم نسخ Sitemap إلى الحافظة بنجاح! (توقيت عالمي)');
+            }
+        }
 
-</urlset>
+        function showCopyMessage(message) {
+            const msgDiv = document.getElementById('copySuccess');
+            msgDiv.textContent = message;
+            msgDiv.style.display = 'block';
+            setTimeout(() => {
+                msgDiv.style.display = 'none';
+            }, 3000);
+        }
+        
+        window.generateSitemap = generateSitemap;
+        window.downloadSitemap = downloadSitemap;
+        window.copyToClipboard = copyToClipboard;
+        
+        // تشغيل تلقائي
+        generateSitemap();
+    </script>
+</body>
+</html>
