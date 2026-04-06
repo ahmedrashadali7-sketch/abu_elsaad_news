@@ -1,4 +1,23 @@
+# SEO Optimized robots.txt for أبو السعد للاخبار
 User-agent: *
 Allow: /
 
-Sitemap: https://abusaladnews.com/sitemap-news.xml
+# Allow important pages
+Allow: /index.html
+Allow: /article.html
+
+# Disallow admin pages
+Disallow: /admin.html
+Disallow: /login.html
+Disallow: /manage-news.html
+Disallow: /js/
+Disallow: /css/
+
+# Sitemap location
+Sitemap: https://abu-el-saad-news.web.app/sitemap.xml
+
+# Crawl delay to be gentle on server
+Crawl-delay: 1
+
+# Specify the host
+Host: https://abu-el-saad-news.web.app

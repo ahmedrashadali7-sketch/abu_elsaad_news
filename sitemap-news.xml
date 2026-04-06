@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
-  <!-- هذه مجرد أمثلة - سيتم تحديثها تلقائياً لاحقاً -->
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- الصفحة الرئيسية -->
   <url>
-    <loc>https://abusaladnews.com/article.html?id=1</loc>
-    <news:news>
-      <news:publication>
-        <news:name>أبو السعد للاخبار</news:name>
-        <news:language>ar</news:language>
-      </news:publication>
-      <news:publication_date>2024-01-01</news:publication_date>
-      <news:title>عنوان الخبر الأول</news:title>
-    </news:news>
+    <loc>https://abu-el-saad-news.web.app/index.html</loc>
+    <lastmod>2026-04-06</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>1.0</priority>
   </url>
+  
+  <!-- باقي الأخبار ستتم إضافتها ديناميكياً -->
+  
 </urlset>
