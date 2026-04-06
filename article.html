@@ -490,6 +490,13 @@
             }
         }
     </style>
+    <!-- شعار الموقع (Favicon) - يظهر في المتصفح -->
+<link rel="icon" type="image/png" href="images/logo.png">
+
+<!-- شعار الموقع لنتائج البحث (Open Graph & Twitter Card) -->
+<meta property="og:image" content="https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/images/logo.png">
+<meta property="og:image:alt" content="شعار أبو السعد للاخبار">
+<meta name="twitter:image" content="https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/images/logo.png">
 </head>
 <body>
     <header class="header">
@@ -717,13 +724,13 @@
                                 "name": "${news.author || 'أبو السعد للاخبار'}"
                             },
                             "publisher": {
-                                "@type": "Organization",
-                                "name": "أبو السعد للاخبار",
-                                "logo": {
-                                    "@type": "ImageObject",
-                                    "url": "https://abu-el-saad-news.web.app/logo.png"
-                                }
-                            },
+    "@type": "Organization",
+    "name": "أبو السعد للاخبار",
+    "logo": {
+        "@type": "ImageObject",
+        "url": "https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/images/logo.png"
+    }
+},
                             "mainEntityOfPage": {
                                 "@type": "WebPage",
                                 "@id": "${currentUrl}"
