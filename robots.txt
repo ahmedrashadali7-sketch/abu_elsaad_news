@@ -13,11 +13,8 @@ Disallow: /manage-news.html
 Disallow: /js/
 Disallow: /css/
 
-# Sitemap location
-Sitemap: https://abu-el-saad-news.web.app/sitemap.xml
+# Sitemap location (الرابط الصحيح لموقعك)
+Sitemap: https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/sitemap.xml
 
 # Crawl delay to be gentle on server
 Crawl-delay: 1
-
-# Specify the host
-Host: https://abu-el-saad-news.web.app
