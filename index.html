@@ -69,7 +69,7 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Google Fonts - مع تحسين CLS -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -102,7 +102,6 @@
             --transition: all 0.3s ease;
         }
 
-        /* منع اهتزاز الخطوط أثناء التحميل (تحسين CLS) */
         body {
             font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
             background: var(--bg-light);
@@ -110,57 +109,6 @@
             line-height: 1.6;
             overflow-x: hidden;
             font-display: swap;
-        }
-
-        /* تحديد ارتفاعات ثابتة لمنع اهتزاز المحتوى (تحسين CLS) */
-        .news-section {
-            min-height: 600px;
-        }
-
-        .news-grid {
-            min-height: 400px;
-        }
-
-        .loading {
-            min-height: 300px;
-        }
-
-        .main-sections, .categories {
-            min-height: 70px;
-        }
-
-        .hero-slider {
-            min-height: 350px;
-        }
-
-        /* منع اهتزاز الصور أثناء التحميل */
-        .card-image {
-            background: linear-gradient(135deg, var(--secondary-color), var(--secondary-light));
-            aspect-ratio: 16 / 9;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card-image img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.4s;
-        }
-
-        /* إطار ثابت للشريط العاجل */
-        .breaking-news {
-            min-height: 60px;
-        }
-
-        /* إطار ثابت للفوتر */
-        .footer {
-            clear: both;
-            position: relative;
-            margin-top: 60px;
         }
 
         .header {
@@ -513,6 +461,56 @@
             min-height: 400px;
         }
 
+        /* Skeleton Screen - يظهر فوراً لمنع LCP المرتفع */
+        .skeleton-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .skeleton-card {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .skeleton-image {
+            height: 200px;
+            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+
+        .skeleton-content {
+            padding: 18px;
+        }
+
+        .skeleton-title {
+            height: 20px;
+            width: 90%;
+            background: #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .skeleton-excerpt {
+            height: 15px;
+            width: 100%;
+            background: #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .skeleton-excerpt.short {
+            width: 70%;
+        }
+
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
         .news-card {
             background: var(--white);
             border-radius: var(--border-radius-lg);
@@ -846,7 +844,8 @@
                 font-size: 0.8rem;
             }
             
-            .news-grid {
+            .news-grid,
+            .skeleton-grid {
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
@@ -872,13 +871,15 @@
         }
 
         @media (min-width: 769px) and (max-width: 1024px) {
-            .news-grid {
+            .news-grid,
+            .skeleton-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (min-width: 1400px) {
-            .news-grid {
+            .news-grid,
+            .skeleton-grid {
                 grid-template-columns: repeat(4, 1fr);
             }
         }
@@ -962,12 +963,42 @@
         <div class="section-header">
             <h2 class="section-title" id="sectionTitle">أحدث الأخبار</h2>
         </div>
-        <div class="news-grid" id="newsGrid">
-            <div class="loading">
-                <div class="spinner"></div>
-                <p>جاري تحميل الأخبار...</p>
+        <!-- Skeleton Grid - يظهر فوراً لتحسين LCP -->
+        <div class="skeleton-grid" id="skeletonGrid">
+            <div class="skeleton-card">
+                <div class="skeleton-image"></div>
+                <div class="skeleton-content">
+                    <div class="skeleton-title"></div>
+                    <div class="skeleton-excerpt"></div>
+                    <div class="skeleton-excerpt short"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-image"></div>
+                <div class="skeleton-content">
+                    <div class="skeleton-title"></div>
+                    <div class="skeleton-excerpt"></div>
+                    <div class="skeleton-excerpt short"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-image"></div>
+                <div class="skeleton-content">
+                    <div class="skeleton-title"></div>
+                    <div class="skeleton-excerpt"></div>
+                    <div class="skeleton-excerpt short"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-image"></div>
+                <div class="skeleton-content">
+                    <div class="skeleton-title"></div>
+                    <div class="skeleton-excerpt"></div>
+                    <div class="skeleton-excerpt short"></div>
+                </div>
             </div>
         </div>
+        <div class="news-grid" id="newsGrid" style="display: none;"></div>
     </section>
 
     <footer class="footer">
@@ -1023,7 +1054,7 @@
         <span>دخول المشرف</span>
     </a>
 
-    <!-- تحميل Firebase بشكل غير متزامن (لا يؤخر ظهور الصفحة) -->
+    <!-- تحميل Firebase بشكل غير متزامن -->
     <script>
         // تحميل Firebase بعد تحميل الصفحة بالكامل
         (function() {
@@ -1038,6 +1069,9 @@
             function startApp(db) {
                 let currentSection = 'all';
                 let currentCategory = 'all';
+
+                const skeletonGrid = document.getElementById('skeletonGrid');
+                const newsGrid = document.getElementById('newsGrid');
 
                 function escapeHtml(text) {
                     if (!text) return '';
@@ -1144,14 +1178,19 @@
                 }
 
                 async function loadNews(db, section = 'all', category = 'all') {
-                    const newsGrid = document.getElementById('newsGrid');
-                    newsGrid.innerHTML = `<div class="loading"><div class="spinner"></div><p>جاري تحميل الأخبار...</p></div>`;
+                    // إظهار Skeleton Grid أثناء التحميل
+                    if (skeletonGrid) skeletonGrid.style.display = 'grid';
+                    if (newsGrid) newsGrid.style.display = 'none';
 
                     try {
                         const snapshot = await db.collection('news').orderBy('createdAt', 'desc').get();
 
                         if (snapshot.empty) {
-                            newsGrid.innerHTML = '<div class="no-news">📭 لا توجد أخبار حالياً</div>';
+                            if (skeletonGrid) skeletonGrid.style.display = 'none';
+                            if (newsGrid) {
+                                newsGrid.style.display = 'grid';
+                                newsGrid.innerHTML = '<div class="no-news">📭 لا توجد أخبار حالياً</div>';
+                            }
                             return;
                         }
 
@@ -1176,7 +1215,11 @@
                         }
 
                         if (allNews.length === 0) {
-                            newsGrid.innerHTML = '<div class="no-news">📭 لا توجد أخبار في هذا القسم</div>';
+                            if (skeletonGrid) skeletonGrid.style.display = 'none';
+                            if (newsGrid) {
+                                newsGrid.style.display = 'grid';
+                                newsGrid.innerHTML = '<div class="no-news">📭 لا توجد أخبار في هذا القسم</div>';
+                            }
                             return;
                         }
 
@@ -1231,7 +1274,12 @@
                             `;
                         });
 
-                        newsGrid.innerHTML = html;
+                        // إخفاء Skeleton وإظهار الأخبار الحقيقية
+                        if (skeletonGrid) skeletonGrid.style.display = 'none';
+                        if (newsGrid) {
+                            newsGrid.innerHTML = html;
+                            newsGrid.style.display = 'grid';
+                        }
 
                         if (section === 'all' && category === 'all') {
                             updateSlider(featuredNews);
@@ -1239,7 +1287,11 @@
 
                     } catch (error) {
                         console.error('خطأ:', error);
-                        newsGrid.innerHTML = '<div class="no-news" style="color: #dc2626;">⚠️ حدث خطأ في تحميل الأخبار</div>';
+                        if (skeletonGrid) skeletonGrid.style.display = 'none';
+                        if (newsGrid) {
+                            newsGrid.style.display = 'grid';
+                            newsGrid.innerHTML = '<div class="no-news" style="color: #dc2626;">⚠️ حدث خطأ في تحميل الأخبار</div>';
+                        }
                     }
                 }
 
