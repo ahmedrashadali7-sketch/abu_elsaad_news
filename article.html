@@ -37,8 +37,12 @@
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23C49A6C'/%3E%3Ctext x='50' y='67' font-size='50' text-anchor='middle' fill='white' font-family='Arial'%3Eأ%3C/text%3E%3C/svg%3E">
     
     <!-- Font Awesome -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
@@ -66,11 +70,116 @@
             --transition: all 0.3s ease;
         }
 
+        /* منع اهتزاز الخطوط أثناء التحميل (تحسين CLS) */
         body {
-            font-family: 'Cairo', sans-serif;
+            font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
             color: var(--text-dark);
             line-height: 1.8;
+            font-display: swap;
+        }
+
+        /* تحديد ارتفاعات ثابتة لمنع اهتزاز المحتوى (تحسين CLS) */
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            min-height: 400px;
+        }
+
+        .loading, .error {
+            text-align: center;
+            padding: 100px 20px;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            animation: fadeInUp 0.5s ease;
+            min-height: 400px;
+        }
+
+        /* Skeleton Screen لمقال واحد - يظهر فوراً لتحسين LCP */
+        .skeleton-article {
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .skeleton-header {
+            padding: 40px 40px 25px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .skeleton-category {
+            width: 100px;
+            height: 35px;
+            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 30px;
+            margin-bottom: 20px;
+        }
+
+        .skeleton-title {
+            height: 40px;
+            width: 90%;
+            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .skeleton-meta {
+            display: flex;
+            gap: 25px;
+            padding: 15px 0 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .skeleton-meta-item {
+            width: 100px;
+            height: 20px;
+            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        .skeleton-image {
+            height: 400px;
+            margin: 30px 40px;
+            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: var(--radius);
+        }
+
+        .skeleton-content {
+            padding: 0 40px 40px;
+        }
+
+        .skeleton-text {
+            height: 18px;
+            width: 100%;
+            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .skeleton-text.short {
+            width: 70%;
+        }
+
+        .skeleton-text.medium {
+            width: 85%;
+        }
+
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         .header {
@@ -106,12 +215,6 @@
 
         .logo span {
             color: var(--primary);
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
         }
 
         .article-card {
@@ -467,6 +570,15 @@
             .share-btn {
                 padding: 10px 20px;
             }
+
+            .skeleton-image {
+                margin: 20px 25px;
+                height: 250px;
+            }
+
+            .skeleton-content {
+                padding: 0 25px 25px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -491,12 +603,12 @@
         }
     </style>
     <!-- شعار الموقع (Favicon) - يظهر في المتصفح -->
-<link rel="icon" type="image/png" href="images/logo.png">
-
-<!-- شعار الموقع لنتائج البحث (Open Graph & Twitter Card) -->
-<meta property="og:image" content="https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/images/logo.png">
-<meta property="og:image:alt" content="شعار أبو السعد للاخبار">
-<meta name="twitter:image" content="https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/images/logo.png">
+    <link rel="icon" type="image/png" href="images/logo.png">
+    
+    <!-- شعار الموقع لنتائج البحث (Open Graph & Twitter Card) -->
+    <meta property="og:image" content="https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/images/logo.png">
+    <meta property="og:image:alt" content="شعار أبو السعد للاخبار">
+    <meta name="twitter:image" content="https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/images/logo.png">
 </head>
 <body>
     <header class="header">
@@ -508,10 +620,27 @@
     </header>
 
     <div class="container" id="articleContainer">
-        <div class="loading">
-            <div class="spinner"></div>
-            <p>جاري تحميل الخبر...</p>
+        <!-- Skeleton Screen - يظهر فوراً لتحسين LCP -->
+        <div class="skeleton-article" id="skeletonArticle">
+            <div class="skeleton-header">
+                <div class="skeleton-category"></div>
+                <div class="skeleton-title"></div>
+                <div class="skeleton-meta">
+                    <div class="skeleton-meta-item"></div>
+                    <div class="skeleton-meta-item"></div>
+                    <div class="skeleton-meta-item"></div>
+                </div>
+            </div>
+            <div class="skeleton-image"></div>
+            <div class="skeleton-content">
+                <div class="skeleton-text"></div>
+                <div class="skeleton-text"></div>
+                <div class="skeleton-text medium"></div>
+                <div class="skeleton-text"></div>
+                <div class="skeleton-text short"></div>
+            </div>
         </div>
+        <div id="realArticle" style="display: none;"></div>
     </div>
 
     <footer class="footer">
@@ -528,9 +657,8 @@
         <i class="fas fa-arrow-up"></i>
     </div>
 
-    <!-- تحميل Firebase بشكل غير متزامن (لا يؤخر ظهور الصفحة) -->
+    <!-- تحميل Firebase بشكل غير متزامن -->
     <script>
-        // تحميل Firebase بعد تحميل الصفحة بالكامل
         (function() {
             function loadScript(src, callback) {
                 var script = document.createElement('script');
@@ -541,7 +669,9 @@
             }
 
             function startApp(db) {
-                // كل دوال الموقع هنا
+                const skeletonArticle = document.getElementById('skeletonArticle');
+                const realArticle = document.getElementById('realArticle');
+
                 window.addEventListener('scroll', function() {
                     const scrollTop = document.getElementById('scrollTop');
                     if (window.pageYOffset > 300) {
@@ -569,26 +699,34 @@
                 const newsId = urlParams.get('id');
 
                 if (!newsId) {
-                    document.getElementById('articleContainer').innerHTML = `
-                        <div class="error">
-                            <i class="fas fa-search" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
-                            <h3>❌ الخبر غير موجود</h3>
-                            <p>لم يتم العثور على الخبر المطلوب</p>
-                            <a href="index.html" class="back-link" style="margin-top: 20px;">← العودة للرئيسية</a>
-                        </div>
-                    `;
+                    if (skeletonArticle) skeletonArticle.style.display = 'none';
+                    if (realArticle) {
+                        realArticle.style.display = 'block';
+                        realArticle.innerHTML = `
+                            <div class="error">
+                                <i class="fas fa-search" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
+                                <h3>❌ الخبر غير موجود</h3>
+                                <p>لم يتم العثور على الخبر المطلوب</p>
+                                <a href="index.html" class="back-link" style="margin-top: 20px;">← العودة للرئيسية</a>
+                            </div>
+                        `;
+                    }
                 } else {
                     db.collection('news').doc(newsId).get()
                         .then((doc) => {
                             if (!doc.exists) {
-                                document.getElementById('articleContainer').innerHTML = `
-                                    <div class="error">
-                                        <i class="fas fa-newspaper" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
-                                        <h3>❌ الخبر غير موجود</h3>
-                                        <p>عذراً، هذا الخبر قد يكون تم حذفه أو نقله</p>
-                                        <a href="index.html" class="back-link" style="margin-top: 20px;">← العودة للرئيسية</a>
-                                    </div>
-                                `;
+                                if (skeletonArticle) skeletonArticle.style.display = 'none';
+                                if (realArticle) {
+                                    realArticle.style.display = 'block';
+                                    realArticle.innerHTML = `
+                                        <div class="error">
+                                            <i class="fas fa-newspaper" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
+                                            <h3>❌ الخبر غير موجود</h3>
+                                            <p>عذراً، هذا الخبر قد يكون تم حذفه أو نقله</p>
+                                            <a href="index.html" class="back-link" style="margin-top: 20px;">← العودة للرئيسية</a>
+                                        </div>
+                                    `;
+                                }
                                 return;
                             }
 
@@ -645,115 +783,123 @@
                                 `;
                             }
 
-                            document.getElementById('articleContainer').innerHTML = `
-                                <article class="article-card">
-                                    <div class="article-header">
-                                        <div class="article-category">
-                                            <i class="fas fa-tag"></i> ${escapeHtml(news.category || 'عام')}
-                                        </div>
-                                        <h1 class="article-title">${escapeHtml(news.title)}</h1>
-                                        <div class="article-meta">
-                                            <div class="author-badge">
-                                                <i class="fas fa-user-edit"></i>
-                                                <span>${escapeHtml(news.author || 'أبو السعد')}</span>
+                            // إخفاء Skeleton وإظهار المقال الحقيقي
+                            if (skeletonArticle) skeletonArticle.style.display = 'none';
+                            if (realArticle) {
+                                realArticle.style.display = 'block';
+                                realArticle.innerHTML = `
+                                    <article class="article-card">
+                                        <div class="article-header">
+                                            <div class="article-category">
+                                                <i class="fas fa-tag"></i> ${escapeHtml(news.category || 'عام')}
                                             </div>
-                                            <span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
-                                            <span><i class="fas fa-clock"></i> ${formattedTime}</span>
-                                            <span><i class="fas fa-eye"></i> ${(news.views || 0) + 1} مشاهدة</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="article-image-container">
-                                        <img src="${news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد'}" 
-                                             alt="${escapeHtml(news.title)}" 
-                                             class="article-image"
-                                             onerror="this.src='https://via.placeholder.com/800x400?text=صورة+غير+متوفرة'">
-                                    </div>
-
-                                    <div class="article-content">
-                                        ${news.content || ''}
-                                    </div>
-
-                                    <div class="article-footer">
-                                        <div class="share-section">
-                                            <div class="share-title">
-                                                <i class="fas fa-share-alt"></i>
-                                                <span>شارك هذا الخبر</span>
-                                            </div>
-                                            <div class="share-buttons">
-                                                <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" 
-                                                   target="_blank" class="share-btn facebook">
-                                                    <i class="fab fa-facebook-f"></i> <span>فيسبوك</span>
-                                                </a>
-                                                <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(news.title)}&url=${encodeURIComponent(window.location.href)}" 
-                                                   target="_blank" class="share-btn twitter">
-                                                    <i class="fab fa-twitter"></i> <span>تويتر</span>
-                                                </a>
-                                                <a href="https://wa.me/?text=${encodeURIComponent(news.title + ' ' + window.location.href)}" 
-                                                   target="_blank" class="share-btn whatsapp">
-                                                    <i class="fab fa-whatsapp"></i> <span>واتساب</span>
-                                                </a>
-                                                <a href="https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(news.title)}" 
-                                                   target="_blank" class="share-btn telegram">
-                                                    <i class="fab fa-telegram-plane"></i> <span>تليجرام</span>
-                                                </a>
+                                            <h1 class="article-title">${escapeHtml(news.title)}</h1>
+                                            <div class="article-meta">
+                                                <div class="author-badge">
+                                                    <i class="fas fa-user-edit"></i>
+                                                    <span>${escapeHtml(news.author || 'أبو السعد')}</span>
+                                                </div>
+                                                <span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
+                                                <span><i class="fas fa-clock"></i> ${formattedTime}</span>
+                                                <span><i class="fas fa-eye"></i> ${(news.views || 0) + 1} مشاهدة</span>
                                             </div>
                                         </div>
-                                        <div style="text-align: center;">
-                                            <a href="index.html" class="back-link">
-                                                <i class="fas fa-arrow-right"></i> العودة للرئيسية
-                                            </a>
+
+                                        <div class="article-image-container">
+                                            <img src="${news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد'}" 
+                                                 alt="${escapeHtml(news.title)}" 
+                                                 class="article-image"
+                                                 onerror="this.src='https://via.placeholder.com/800x400?text=صورة+غير+متوفرة'">
                                         </div>
-                                    </div>
-                                    ${hiddenTagsHTML}
-                                </article>
-                                
-                                <script type="application/ld+json">
-                                {
-                                    "@context": "https://schema.org",
-                                    "@type": "NewsArticle",
-                                    "headline": "${news.title.replace(/"/g, '\\"')}",
-                                    "description": "${(news.excerpt || news.title).replace(/"/g, '\\"').substring(0, 200)}",
-                                    "image": "${news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد'}",
-                                    "datePublished": "${date.toISOString()}",
-                                    "dateModified": "${date.toISOString()}",
-                                    "author": {
-                                        "@type": "Person",
-                                        "name": "${news.author || 'أبو السعد للاخبار'}"
-                                    },
-                                    "publisher": {
-                                        "@type": "Organization",
-                                        "name": "أبو السعد للاخبار",
-                                        "logo": {
-                                            "@type": "ImageObject",
-                                            "url": "https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/images/logo.png"
-                                        }
-                                    },
-                                    "mainEntityOfPage": {
-                                        "@type": "WebPage",
-                                        "@id": "${currentUrl}"
-                                    },
-                                    "keywords": "${metaKeywords}",
-                                    "about": [${tags.map(tag => `"${tag.replace(/"/g, '\\"')}"`).join(', ')}]
-                                }
-                                <\/script>
-                            `;
+
+                                        <div class="article-content">
+                                            ${news.content || ''}
+                                        </div>
+
+                                        <div class="article-footer">
+                                            <div class="share-section">
+                                                <div class="share-title">
+                                                    <i class="fas fa-share-alt"></i>
+                                                    <span>شارك هذا الخبر</span>
+                                                </div>
+                                                <div class="share-buttons">
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}" 
+                                                       target="_blank" class="share-btn facebook">
+                                                        <i class="fab fa-facebook-f"></i> <span>فيسبوك</span>
+                                                    </a>
+                                                    <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(news.title)}&url=${encodeURIComponent(window.location.href)}" 
+                                                       target="_blank" class="share-btn twitter">
+                                                        <i class="fab fa-twitter"></i> <span>تويتر</span>
+                                                    </a>
+                                                    <a href="https://wa.me/?text=${encodeURIComponent(news.title + ' ' + window.location.href)}" 
+                                                       target="_blank" class="share-btn whatsapp">
+                                                        <i class="fab fa-whatsapp"></i> <span>واتساب</span>
+                                                    </a>
+                                                    <a href="https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(news.title)}" 
+                                                       target="_blank" class="share-btn telegram">
+                                                        <i class="fab fa-telegram-plane"></i> <span>تليجرام</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div style="text-align: center;">
+                                                <a href="index.html" class="back-link">
+                                                    <i class="fas fa-arrow-right"></i> العودة للرئيسية
+                                                </a>
+                                            </div>
+                                        </div>
+                                        ${hiddenTagsHTML}
+                                    </article>
+                                    
+                                    <script type="application/ld+json">
+                                    {
+                                        "@context": "https://schema.org",
+                                        "@type": "NewsArticle",
+                                        "headline": "${news.title.replace(/"/g, '\\"')}",
+                                        "description": "${(news.excerpt || news.title).replace(/"/g, '\\"').substring(0, 200)}",
+                                        "image": "${news.image || 'https://via.placeholder.com/800x400?text=أبو+السعد'}",
+                                        "datePublished": "${date.toISOString()}",
+                                        "dateModified": "${date.toISOString()}",
+                                        "author": {
+                                            "@type": "Person",
+                                            "name": "${news.author || 'أبو السعد للاخبار'}"
+                                        },
+                                        "publisher": {
+                                            "@type": "Organization",
+                                            "name": "أبو السعد للاخبار",
+                                            "logo": {
+                                                "@type": "ImageObject",
+                                                "url": "https://ahmedrashadali7-sketch.github.io/abu_elsaad_news/images/logo.png"
+                                            }
+                                        },
+                                        "mainEntityOfPage": {
+                                            "@type": "WebPage",
+                                            "@id": "${currentUrl}"
+                                        },
+                                        "keywords": "${metaKeywords}",
+                                        "about": [${tags.map(tag => `"${tag.replace(/"/g, '\\"')}"`).join(', ')}]
+                                    }
+                                    <\/script>
+                                `;
+                            }
                         })
                         .catch((error) => {
                             console.error('❌ خطأ:', error);
-                            document.getElementById('articleContainer').innerHTML = `
-                                <div class="error">
-                                    <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
-                                    <h3>❌ حدث خطأ في تحميل الخبر</h3>
-                                    <p style="color: #666; margin: 15px;">${escapeHtml(error.message)}</p>
-                                    <a href="index.html" class="back-link" style="margin-top: 20px;">← العودة للرئيسية</a>
-                                </div>
-                            `;
+                            if (skeletonArticle) skeletonArticle.style.display = 'none';
+                            if (realArticle) {
+                                realArticle.style.display = 'block';
+                                realArticle.innerHTML = `
+                                    <div class="error">
+                                        <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
+                                        <h3>❌ حدث خطأ في تحميل الخبر</h3>
+                                        <p style="color: #666; margin: 15px;">${escapeHtml(error.message)}</p>
+                                        <a href="index.html" class="back-link" style="margin-top: 20px;">← العودة للرئيسية</a>
+                                    </div>
+                                `;
+                            }
                         });
                 }
             }
 
-            // بدء تحميل Firebase بعد أن تصبح الصفحة جاهزة
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', function() {
                     loadScript('https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js', function() {
