@@ -1,1 +1,16 @@
+name: Auto News Fetcher
 
+on:
+  schedule:
+    - cron: '0 * * * *'  # كل ساعة
+  workflow_dispatch:       # تشغيل يدوي من GitHub
+
+jobs:
+  fetch-news:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: node auto-news.js
